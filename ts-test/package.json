@@ -12,9 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "@parity/revive": "^0.0.5",
+    "dotenv": "16.4.7",
     "ethers": "^6.13.4",
     "solc": "^0.8.28",
-    "dotenv": "16.4.7",
     "viem": "^2.21.47"
   },
   "devDependencies": {
