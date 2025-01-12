@@ -12,9 +12,12 @@
   "license": "ISC",
   "dependencies": {
     "@parity/revive": "^0.0.5",
-    "dotenv": "16.4.7",
+    "@polkadot-api/descriptors": "file:.papi/descriptors",
     "@polkadot/api": "15.1.1",
+    "dotenv": "16.4.7",
     "ethers": "^6.13.4",
+    "polkadot-api": "^1.8.1",
+    "@polkadot-labs/hdkd": "0.0.10",
     "solc": "^0.8.28",
     "viem": "^2.21.47"
   },
