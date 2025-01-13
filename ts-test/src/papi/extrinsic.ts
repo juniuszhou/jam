@@ -3,8 +3,6 @@
 import { MultiAddress } from "@polkadot-api/descriptors"
 import { asset } from '@polkadot-api/descriptors';
 import { createClient } from 'polkadot-api';
-import { Keyring } from '@polkadot/api';
-// Use this import for Node.js environments
 import { getWsProvider } from 'polkadot-api/ws-provider/web';
 import { getPolkadotSigner } from "polkadot-api/signer"
 import {
@@ -18,7 +16,6 @@ import { sr25519CreateDerive } from "@polkadot-labs/hdkd"
 async function main() {
     const provider = getWsProvider('ws://10.0.0.11:9944');
     // const provider = getWsProvider('wss://westend-asset-hub-rpc.polkadot.io');
-
     const client = createClient(provider);
     const dotApi = client.getTypedApi(asset);
 
@@ -27,14 +24,9 @@ async function main() {
     const derive = sr25519CreateDerive(miniSecret)
 
     const alice = derive("//Alice")
-
-    console.log(ss58Address(alice.publicKey), alice.sign)
-
     const bob = derive("//Bob")
 
     const signer = getPolkadotSigner(alice.publicKey, "Sr25519", alice.sign)
-
-    console.log(signer)
 
     // console.log(MultiAddress.Address32(bob.publicKey))
 

@@ -1,10 +1,6 @@
 import { asset } from '@polkadot-api/descriptors';
 import { createClient } from 'polkadot-api';
-import { Keyring } from '@polkadot/api';
-import { sr25519 } from "@polkadot-labs/hdkd-helpers"
-// Use this import for Node.js environments
 import { getWsProvider } from 'polkadot-api/ws-provider/web';
-import { getPolkadotSigner } from "polkadot-api/signer"
 
 async function main() {
     // const provider = getWsProvider('wss://westend-asset-hub-rpc.polkadot.io');
@@ -31,6 +27,8 @@ async function main() {
     }
   */
     dotApi.event.Balances.Transfer.watch().pipe().forEach(console.log)
+
+    dotApi.tx.Revive.upload_code({ code: "", storage_deposit_limit: BigInt(100000000) });
 }
 
 main()
