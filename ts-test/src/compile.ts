@@ -2,9 +2,11 @@
 import { compile } from '@parity/revive'
 import { format } from 'prettier'
 import { parseArgs } from 'node:util'
-// import solc from 'solc';
+// TODO how to make it work.
+import solc from 'solc';
 import { readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
+
 
 // for (const { keypath, contract, file } of input) {
 // 	const input = {
@@ -37,21 +39,21 @@ import { join } from 'path'
 
 type CompileInput = Parameters<typeof compile>[0]
 
-// function evmCompile(sources: CompileInput) {
-// 	const input = {
-// 		language: 'Solidity',
-// 		sources,
-// 		settings: {
-// 			outputSelection: {
-// 				'*': {
-// 					'*': ['*'],
-// 				},
-// 			},
-// 		},
-// 	}
+function evmCompile(sources: CompileInput) {
+    const input = {
+        language: 'Solidity',
+        sources,
+        settings: {
+            outputSelection: {
+                '*': {
+                    '*': ['*'],
+                },
+            },
+        },
+    }
 
-// 	return solc.compile(JSON.stringify(input))
-// }
+    return solc.compile(JSON.stringify(input))
+}
 
 // { file: 'Event.sol', contract: 'EventExample', keypath: 'event' },
 // { file: 'PiggyBank.sol', contract: 'PiggyBank', keypath: 'piggyBank' },
@@ -63,7 +65,7 @@ async function compileContract(fileName: string, contractName: string, keypath: 
     // read file
     const content = readFileSync(join('contracts', fileName), 'utf8');
 
-    const input = {[fileName]: {content}};
+    const input = { [fileName]: { content } };
 
     // compile evm 
     // const out = JSON.parse(evmCompile(input));
@@ -82,22 +84,28 @@ async function compileContract(fileName: string, contractName: string, keypath: 
     //     })
     // )
 
-    
-        // compile with revive
-        const out = await compile(input)
-        // writeFileSync(
-        //     join('pvm', `${keypath}.json`),
-        //     Buffer.from(out.contracts[fileName][contractName], 'utf-8')
-        // )
 
-        console.log(out.contracts[fileName]);
+    // compile with revive
+    const out = await compile(input)
+    // writeFileSync(
+    //     join('pvm', `${keypath}.json`),
+    //     Buffer.from(out.contracts[fileName][contractName], 'utf-8')
+    // )
 
-        const entry = out.contracts[fileName][contractName]
-        writeFileSync(
-            join('pvm', `${keypath}.polkavm`),
-            Buffer.from(entry.evm.bytecode.object, 'hex')
-        )
+    console.log(out.contracts[fileName]);
+
+    const entry = out.contracts[fileName][contractName]
+    writeFileSync(
+        join('pvm', `${keypath}.polkavm`),
+        Buffer.from(entry.evm.bytecode.object, 'hex')
+    )
 
 }
 
-compileContract("PiggyBank.sol", "PiggyBank", "piggyBank");
+const input = {
+    ['PiggyBank.sol']: { content: readFileSync(join('contracts', 'PiggyBank.sol'), 'utf8') },
+}
+
+evmCompile(input);
+
+// compileContract("PiggyBank.sol", "PiggyBank", "piggyBank");
