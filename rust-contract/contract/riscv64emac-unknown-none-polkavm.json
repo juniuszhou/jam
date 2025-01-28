@@ -16,11 +16,7 @@
   "target-pointer-width": "64",
   "singlethread": true,
   "pre-link-args": {
-    "ld": [
-      "--emit-relocs",
-      "--unique",
-      "--relocatable"
-    ]
+    "ld": ["--emit-relocs", "--unique", "--relocatable"]
   },
   "env": "polkavm"
 }

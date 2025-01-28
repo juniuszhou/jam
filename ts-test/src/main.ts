@@ -1,4 +1,4 @@
-import { walletClient } from "./utils";
+import { walletClient } from "./eth/utils";
 
 
 async function main() {
