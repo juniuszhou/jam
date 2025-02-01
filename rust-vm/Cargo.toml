@@ -1,9 +1,9 @@
 [workspace]
 resolver = "2"
 members = [
-    # "vm-program/program",
+    "vm-program/program",
     "contract",
-    # "vm-program/runner",
+    "vm-program/runner",
 ]
 
 # [package]
