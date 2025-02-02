@@ -3,7 +3,7 @@ use polkavm::{Config, Engine, InterruptKind, Linker, Module, ProgramBlob, Reg};
 fn main() {
     env_logger::init();
 
-    let raw_blob = include_bytes!("../example-hello-world.polkavm");
+    let raw_blob = include_bytes!("../../rust-vm/output/example-hello-world.polkavm");
     let blob = ProgramBlob::parse(raw_blob[..].into()).unwrap();
 
     let config = Config::from_env().unwrap();

@@ -1,24 +1,25 @@
+
+
+[profile.release]
+lto = "fat"
+panic = "abort"
+opt-level = 3
+codegen-units = 1
+debug = true
+
+[profile.no-lto]
+inherits = "release"
+lto = false
+
 [workspace]
 resolver = "2"
 members = [
-    "program",
-    "runner",
+    "hello-world",
 ]
 
-# [package]
-# name = "rust-contract-template"
-# version = "0.1.0"
-# edition = "2021"
-# publish = false
-
-# [[bin]]
-# name = "contract"
-# path = "src/main.rs"
-
-[profile.release]
-opt-level = "s"
-lto = "fat"
-codegen-units = 1
+[workspace.lints.rust]
+unexpected-cfgs = "allow"
+static_mut_refs = "allow"
 
 [workspace.dependencies]
 polkavm-derive = { version = "0.19.0" }
