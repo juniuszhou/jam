@@ -2,6 +2,8 @@
 
 ## install
 
+## attention to the vervison. polkavm couldn't execute if compile with different version.
+
 ```bash
 cargo install polkatool
 ```
@@ -17,3 +19,11 @@ xxd -r -p bytecode.txt code.polkavm
 ```bash
 polkatool disassemble code.polkavm
 ```
+
+## get the target json file
+
+```bash
+polkatool get-target-json-path
+```
+
+/home/user/.cache/.polkavm-linker/0.19.0/riscv32emac-unknown-none-polkavm.json
