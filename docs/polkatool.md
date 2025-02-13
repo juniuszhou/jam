@@ -8,7 +8,7 @@
 cargo install polkatool
 ```
 
-## convert evm bytecode to polkavm code
+## convert evm bytecode to polkavm code. hex to binary.
 
 ```bash
 xxd -r -p bytecode.txt code.polkavm

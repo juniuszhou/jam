@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/main.ts",
+    "compile": "ts-node src/compile.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,7 +19,6 @@
     "ethers": "^6.13.4",
     "polkadot-api": "^1.8.1",
     "@polkadot-labs/hdkd": "0.0.10",
-    "solc": "^0.8.28",
     "viem": "^2.21.47"
   },
   "devDependencies": {

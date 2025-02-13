@@ -39,8 +39,8 @@ console.log('Compiling contracts...')
 
 const input = [
 	{ file: 'Event.sol', contract: 'EventExample', keypath: 'event' },
-	{ file: 'PiggyBank.sol', contract: 'PiggyBank', keypath: 'piggyBank' },
-	{ file: 'ErrorTester.sol', contract: 'ErrorTester', keypath: 'errorTester' },
+	// { file: 'PiggyBank.sol', contract: 'PiggyBank', keypath: 'piggyBank' },
+	// { file: 'ErrorTester.sol', contract: 'ErrorTester', keypath: 'errorTester' },
 ].filter(({ keypath }) => !filter || keypath.includes(filter))
 
 for (const { keypath, contract, file } of input) {
@@ -51,7 +51,9 @@ for (const { keypath, contract, file } of input) {
 	{
 		console.log(`Compile with solc ${file}`)
 		const out = JSON.parse(evmCompile(input))
+		console.log("out is ", out);
 		const entry = out.contracts[file][contract]
+		console.log("out is ", entry);
 		writeFileSync(join('evm', `${keypath}.bin`), Buffer.from(entry.evm.bytecode.object, 'hex'))
 		writeFileSync(
 			join('abi', `${keypath}.ts`),

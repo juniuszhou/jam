@@ -1,5 +1,5 @@
 import { spawn, spawnSync, Subprocess } from 'bun'
-import { join, resolve } from 'path'
+import { resolve } from 'path'
 import { readFileSync } from 'fs'
 import { createWalletClient, defineChain, Hex, http, publicActions } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'

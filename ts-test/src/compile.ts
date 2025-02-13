@@ -1,9 +1,9 @@
 
-import { compile } from '@parity/revive'
+// import { compile } from '@parity/revive'
 import { format } from 'prettier'
 import { parseArgs } from 'node:util'
 // TODO how to make it work.
-import solc from 'solc';
+import { solc } from 'solc';
 import { readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
 
