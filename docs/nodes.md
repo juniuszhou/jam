@@ -10,8 +10,14 @@ polkadot-sdk/target/release/substrate-node
 
 ## build
 
+```bash
 cargo build --release
+cargo build --bin substrate-node
+
 cargo run -p pallet-revive-eth-rpc
+
+cargo run -p staging-node-cli
+```
 
 ## startup
 
