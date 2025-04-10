@@ -17,7 +17,7 @@ xxd -r -p bytecode.txt code.polkavm
 ## disassemble polkavm code
 
 ```bash
-polkatool disassemble code.polkavm
+polkatool disassemble contract.polkavm
 ```
 
 ## get the target json file
