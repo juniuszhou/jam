@@ -1,0 +1,43 @@
+[package]
+name = "rust-contract-template"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "fibonacci"
+path = "src/fibonacci.rs"
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+
+[[bin]]
+name = "double"
+path = "src/double.rs"
+
+[[bin]]
+name = "constructor"
+path = "src/constructor.rs"
+
+[[bin]]
+name = "storage"
+path = "src/storage.rs"
+
+[[bin]]
+name = "immutable"
+path = "src/immutable.rs"
+
+[profile.release]
+opt-level = "s"
+lto = "fat"
+codegen-units = 1
+
+[dependencies]
+polkavm-derive = { version = "0.19.0" }
+
+[dependencies.uapi]
+package = "pallet-revive-uapi"
+git = "https://github.com/paritytech/polkadot-sdk.git"
+default-features = false
+features = ["unstable-hostfn"]
