@@ -22,13 +22,13 @@ cargo run -p staging-node-cli
 ## startup
 
 ```bash
-RUST_LOG="error,evm=debug,sc_rpc_server=info,runtime::revive=debug" cargo run --bin substrate-node -- --dev --unsafe-rpc-external
+RUST_LOG="evm=debug,sc_rpc_server=info,runtime::revive=debug" cargo run --bin substrate-node -- --dev --unsafe-rpc-external
 ```
 
 OR
 
 ```bash
-RUST_LOG="error,evm=debug,sc_rpc_server=info,runtime::revive=debug" target/release/substrate-node --dev --unsafe-rpc-external
+RUST_LOG="evm=debug,sc_rpc_server=info,runtime::revive=debug" target/release/substrate-node --dev --tmp --unsafe-rpc-external
 ```
 
 ```bash

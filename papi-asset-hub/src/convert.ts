@@ -5,6 +5,8 @@ import { ss58Address } from "@polkadot-labs/hdkd-helpers";
 import { hexToU8a } from "@polkadot/util";
 import { blake2AsU8a, decodeAddress } from "@polkadot/util-crypto";
 import { Binary } from "polkadot-api";
+import { getAddress } from 'viem';
+
 const SS58_PREFIX = 42
 
 export function toViemAddress(address: string): Address {
@@ -52,7 +54,7 @@ export function ss58ToEthAddress(ss58Address: string) {
     // Convert the 20 bytes into an Ethereum H160 address format (Hex string)
     const ethereumAddress = '0x' + Buffer.from(ethereumAddressBytes).toString('hex');
 
-    return ethereumAddress;
+    return getAddress(ethereumAddress);
 }
 
 export function ss58ToH160(ss58Address: string): Binary {
