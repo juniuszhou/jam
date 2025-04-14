@@ -38,3 +38,34 @@ contract StoreData {
         
     }
 }
+
+// test immutable contract
+contract getImmutable {
+    bytes public value;
+
+    function getValue() public returns (uint256) {
+        address precompile = address(0xF010f33e5749cF5471f2c44F33935F7679Fbd71F);
+
+        bool success;
+        bytes memory resultInMemory;
+        // just all it without selector
+        (success, resultInMemory) = precompile.call{value: 0}(abi.encode(""));
+        value = resultInMemory;
+        uint256 result = abi.decode(resultInMemory, (uint256));
+        return result;
+    }
+}
+
+contract getConstructor {
+    bytes public data;
+    function getValue() public {
+        address precompile = address(0x1eff8A3DFd95398768e909877eaA48bFe47961FC);
+
+        bool success;
+        bytes memory resultInMemory;
+        // just all it without selector
+        (success, resultInMemory) = precompile.call{value: 0}(abi.encode(""));
+        data = resultInMemory;
+    }
+}
+

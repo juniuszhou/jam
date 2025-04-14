@@ -7,7 +7,7 @@ import { PolkadotClient } from "polkadot-api";
 async function deployLocal(client: PolkadotClient, name: string) {
      let api = await getLocalApi(client)
     let signer = await getAlice()
-    await mapLocal(api, signer)
+    // await mapLocal(api, signer)
     let result = await deploy(api, signer, name)
 }
 
@@ -18,9 +18,12 @@ async function deployAh(client: PolkadotClient, name: string) {
 }
 
 async function main() {
-    let client = await getClient("http://127.0.0.1:9944")
+    // let client = await getClient("http://127.0.0.1:9944")
+    // await deployLocal(client, "immutable")
 
-    await deployLocal(client, "immutable")
+    let client = await getClient("wss://westend-asset-hub-rpc.polkadot.io")
+    await deployAh(client, "constructor")
+   
 
     client.destroy()
 

@@ -1,4 +1,6 @@
 import { config } from "dotenv"
+import { } from "viem/accounts"
+
 // import { u8aToHex } from '@polkadot/util'
 // import { mnemonicToMiniSecret, sr25519PairFromSeed, cryptoWaitReady } from "@polkadot/util-crypto";
 
@@ -23,19 +25,21 @@ export function convertPublicKeyToSs58(publickey: Uint8Array) {
 export async function deploy(api: TypedApi<typeof local | typeof hub>, signer: PolkadotSigner, name: string) {
 
 
-    const path = "../rust-contract-template/" + name + ".polkavm"
+    const path = "../rust-contract/" + name + ".polkavm"
     const binaryData = readFileSync(path);
 
 
     // submit code
     const tx = api.tx.Revive.instantiate_with_code({
         data: Binary.fromHex("0x1234567812345678"),
-        value: BigInt(100),
+        value: BigInt(0),
         gas_limit: {
-            ref_time: BigInt(1e10),
-            proof_size: BigInt(1e10),
+            // computation cost
+            ref_time: BigInt(1e12),
+            // storage cost
+            proof_size: BigInt(1e6),
         },
-        storage_deposit_limit: BigInt(1e20),
+        storage_deposit_limit: BigInt(1e18),
         code: Binary.fromBytes(binaryData),
         salt: undefined
     })
@@ -74,6 +78,9 @@ export async function deploy(api: TypedApi<typeof local | typeof hub>, signer: P
     console.log("erc20 address is ", erc20Address)
 }
 
+export async function deployEVM() {
+
+}
 
 // export async function deployAh(api: TypedApi<typeof hub | typeof local>, signer: PolkadotSigner, name: string) {    
 

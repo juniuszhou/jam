@@ -20,7 +20,7 @@ const KEY: &[u8] = b"constructor ";
 #[polkavm_derive::polkavm_export]
 pub extern "C" fn deploy() {
     // input a uit256 and store it in the contract storage
-    input!(data: &[u8; 32],);
+    input!(data: &[u8; 8],);
     // Read the contract address. do we know it at this point?
     // it is empty now and will be filled in the deploy function
     // let mut addr = [0u8; 20];
@@ -47,7 +47,7 @@ pub extern "C" fn call() {
     // key[0..20].copy_from_slice(&addr);
     // key[20..].copy_from_slice(KEY);
 
-    let mut output = [0u8; 32];
+    let mut output = [0u8; 8];
 
     api::get_storage(StorageFlags::empty(), KEY, &mut &mut output[..]).unwrap();
 
