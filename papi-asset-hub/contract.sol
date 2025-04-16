@@ -69,3 +69,33 @@ contract getConstructor {
     }
 }
 
+
+
+contract getSelector {
+    bytes public data;
+    function getValue() public {
+        address precompile = address(0xC2cd43e189ea3F48f43c568582eB78bb14dD9B11);
+
+        bool success;
+        bytes memory resultInMemory;
+        // just all it without selector
+        (success, resultInMemory) = precompile.call{value: 0}(abi.encode(""));
+        data = resultInMemory;
+    }
+}
+
+
+
+
+contract getERC20 {
+    bytes public data;
+    function getValue() public {
+        address precompile = address(0xb7F3163bf7a318B960b62593c64dcdbD51473415);
+
+        bool success;
+        bytes memory resultInMemory;
+        // just all it without selector
+        (success, resultInMemory) = precompile.call{value: 0}(abi.encode("name()"));
+        data = resultInMemory;
+    }
+}

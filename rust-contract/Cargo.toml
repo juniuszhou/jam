@@ -28,6 +28,14 @@ path = "src/storage.rs"
 name = "immutable"
 path = "src/immutable.rs"
 
+[[bin]]
+name = "selector"
+path = "src/selector.rs"
+
+[[bin]]
+name = "erc20"
+path = "src/erc20.rs"
+
 [profile.release]
 opt-level = "s"
 lto = "fat"

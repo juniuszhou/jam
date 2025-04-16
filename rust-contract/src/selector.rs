@@ -2,7 +2,7 @@
 #![no_std]
 
 // use alloc::collections::HashMap;
-use uapi::{HostFn, HostFnImpl as api, ReturnFlags};
+use uapi::{input, HostFn, HostFnImpl as api, StorageFlags};
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
@@ -12,6 +12,8 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
         core::hint::unreachable_unchecked();
     }
 }
+const KEY: &[u8] = b"selector ";
+const PARAMETER: &[u8] = b"parameter ";
 
 /// This is the constructor which is called once per contract.
 #[no_mangle]
@@ -22,42 +24,8 @@ pub extern "C" fn deploy() {}
 #[no_mangle]
 #[polkavm_derive::polkavm_export]
 pub extern "C" fn call() {
-    let mut input = [0u8; 36];
+    input!(selector: &[u8; 4], parameter: &[u8; 32],);
 
-    let function_name = b"transfer";
-    let mut output: [u8; 32] = [0u8; 32];
-    api::hash_keccak_256(function_name, &mut output);
-
-    // api::set_storage(flags, key, value);
-
-    let mut selector = [0u8; 4];
-    selector.copy_from_slice(&output);
-
-    // store input data into `buffer`
-    // it will trap if the buffer is smaller than the input
-    api::call_data_copy(&mut input, 0);
-
-    // the actual 4 byte integer is stored at offset 32
-    // 4 byte selector
-    // 28 byte padding as every integer is padded to be 32 byte
-    let n = u32::from_be_bytes((&input[32..]).try_into().unwrap());
-
-    let result = fibonacci(n);
-
-    // pad the result to 32 byte
-    let mut output = [0u8; 32];
-    output[28..].copy_from_slice(&result.to_be_bytes());
-
-    // returning without calling this function leaves the output buffer empty
-    api::return_value(ReturnFlags::empty(), &output);
-}
-
-fn fibonacci(n: u32) -> u32 {
-    if n == 0 {
-        0
-    } else if n == 1 {
-        1
-    } else {
-        fibonacci(n - 1) + fibonacci(n - 2)
-    }
+    api::set_storage(StorageFlags::empty(), KEY, &selector[..]);
+    api::set_storage(StorageFlags::empty(), PARAMETER, &parameter[..]);
 }

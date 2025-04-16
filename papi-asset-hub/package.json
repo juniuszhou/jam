@@ -4,6 +4,8 @@
   "main": "index.js",
   "scripts": {
     "start": " ts-node src/main.ts",
+    "deploy": " ts-node src/deploy.ts",
+    "verify": " ts-node src/verify.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

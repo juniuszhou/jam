@@ -13,7 +13,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
     }
 }
 
-const KEY: &[u8] = b"constructor ";
+const KEY: &[u8] = b"constructor";
 
 /// This is the constructor which is called once per contract.
 #[no_mangle]
