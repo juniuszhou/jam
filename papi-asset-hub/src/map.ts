@@ -14,26 +14,23 @@ import { hub, local } from "@polkadot-api/descriptors"
 import { readFileSync } from 'fs';
 import { Binary, TypedApi } from 'polkadot-api'
 import { getPolkadotSigner, PolkadotSigner } from "polkadot-api/signer"
-import {ss58ToEthAddress} from "./convert"
+import {ss58ToEthAddress, ss58ToH160} from "./convert"
 const SS58_PREFIX = 42;
 export function convertPublicKeyToSs58(publickey: Uint8Array) {
     return ss58Address(publickey, SS58_PREFIX);
 }
 
-export async function mapLocal(api: TypedApi<typeof local>, signer: PolkadotSigner) {
+export async function mapAccount(api: TypedApi<typeof local> | TypedApi<typeof hub>, signer: PolkadotSigner) {
+    const ss58Address = convertPublicKeyToSs58(signer.publicKey)
+    const mapped = await api.query.Revive.OriginalAccount.getValue(ss58ToH160(ss58Address));
+    if (mapped) {
+        console.log("Already mapped")
+        return
+    }
 
     const tx = api.tx.Revive.map_account()
 
     let result = await tx.signAndSubmit(signer)
     console.log(result)
 
-}
-
-
-export async function mapAh(api: TypedApi<typeof hub>, signer: PolkadotSigner, name: string) {    
-
-    const tx = api.tx.Revive.map_account()
-
-    let result = await tx.signAndSubmit(signer)
-    console.log(result)
 }

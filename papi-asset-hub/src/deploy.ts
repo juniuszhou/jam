@@ -3,7 +3,7 @@ import { } from "viem/accounts"
 import {getLocalApi, getAhApi, getClient} from "./api"
 import { getAlice, getSignerAh,  } from "./signer";
 import { PolkadotClient } from "polkadot-api";
-import {mapLocal} from "./map";
+import {mapAccount} from "./map";
 // import { u8aToHex } from '@polkadot/util'
 // import { mnemonicToMiniSecret, sr25519PairFromSeed, cryptoWaitReady } from "@polkadot/util-crypto";
 
@@ -128,7 +128,7 @@ async function deployLocal(client: PolkadotClient, name: string) {
     let api = await getLocalApi(client)
    //  api.apis.ReviveApi.gas_price()
    let signer = await getAlice()
-   await mapLocal(api, signer)
+   await mapAccount(api, signer)
    let result = await deploy(api, signer, name)
 }
 
