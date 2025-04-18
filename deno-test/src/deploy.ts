@@ -1,9 +1,9 @@
 import { config } from "dotenv";
 import {} from "viem/accounts";
-import { getAhApi, getClient, getLocalApi } from "./api";
-import { getAlice, getSignerAh } from "./signer";
+import { getAhApi, getClient, getLocalApi } from "./api.ts";
+import { getAlice, getSignerAh } from "./signer.ts";
 import { PolkadotClient } from "polkadot-api";
-import { mapAccount } from "./map";
+import { mapAccount } from "./map.ts";
 // import { u8aToHex } from '@polkadot/util'
 // import { mnemonicToMiniSecret, sr25519PairFromSeed, cryptoWaitReady } from "@polkadot/util-crypto";
 
@@ -19,12 +19,11 @@ import { sr25519CreateDerive } from "@polkadot-labs/hdkd";
 import { getWsProvider } from "polkadot-api/ws-provider/web";
 import { createClient } from "polkadot-api";
 import { ss58Address } from "@polkadot-labs/hdkd-helpers";
-import { hub, local } from "@polkadot-api/descriptors";
-// import { readFileSync } from DelayNode.readFileSync;
-import { readFileSync } from "fs";
+import { hub, local } from "../.papi/descriptors/src/index.ts";
+
 import { Binary, TypedApi } from "polkadot-api";
 import { getPolkadotSigner, PolkadotSigner } from "polkadot-api/signer";
-import { ss58ToEthAddress } from "./convert";
+import { ss58ToEthAddress } from "./convert.ts";
 import { encodeAbiParameters, parseAbiParameters } from "viem";
 
 const SS58_PREFIX = 42;
@@ -51,7 +50,7 @@ export async function deploy(
   name: string,
 ) {
   const path = "../rust-contract/" + name + ".polkavm";
-  const binaryData = readFileSync(path);
+  const binaryData = Deno.readFileSync(path);
 
   // input for selector contract
   const constructorInput = getErc20ConstructorInput();

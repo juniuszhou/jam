@@ -1,0 +1,18 @@
+{
+    "tasks": {
+      "main": "deno run --allow-all main.ts",
+      "deploy": "deno run --allow-all src/deploy.ts",
+      "dev": "deno run --watch main.ts"
+    },
+    "imports": {
+      "@std/assert": "jsr:@std/assert@1",
+      "@polkadot-api/descriptors": "file:.papi/descriptors",
+        "@polkadot-labs/hdkd": "^0.0.10",
+        "@polkadot-labs/hdkd-helpers": "^0.0.11",
+        "crypto": "^1.0.1",
+        "dotenv": "16.4.7",
+        "ethers": "^6.13.5",
+        "@polkadot/api": "15.1.1",
+        "polkadot-api": "1.9.10"
+    }
+  }
