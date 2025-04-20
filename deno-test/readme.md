@@ -10,7 +10,9 @@ deno install
 
 ## run task
 
-deno run deploy
+```bash
+deno task deploy
+```
 
 ## get metadata
 

@@ -1,30 +1,15 @@
-import { config } from "dotenv";
-import {} from "viem/accounts";
 import { getAhApi, getClient, getLocalApi } from "./api.ts";
 import { getAlice, getSignerAh } from "./signer.ts";
 import { PolkadotClient } from "polkadot-api";
 import { mapAccount } from "./map.ts";
-// import { u8aToHex } from '@polkadot/util'
-// import { mnemonicToMiniSecret, sr25519PairFromSeed, cryptoWaitReady } from "@polkadot/util-crypto";
 
-import {
-  DEV_PHRASE,
-  entropyToMiniSecret,
-  KeyPair,
-  mnemonicToEntropy,
-} from "@polkadot-labs/hdkd-helpers";
-
-import { sr25519CreateDerive } from "@polkadot-labs/hdkd";
-
-import { getWsProvider } from "polkadot-api/ws-provider/web";
-import { createClient } from "polkadot-api";
 import { ss58Address } from "@polkadot-labs/hdkd-helpers";
 import { hub, local } from "../.papi/descriptors/src/index.ts";
 
 import { Binary, TypedApi } from "polkadot-api";
-import { getPolkadotSigner, PolkadotSigner } from "polkadot-api/signer";
+import {  PolkadotSigner } from "polkadot-api/signer";
 import { ss58ToEthAddress } from "./convert.ts";
-import { encodeAbiParameters, parseAbiParameters } from "viem";
+import { encodeAbiParameters } from "viem";
 
 const SS58_PREFIX = 42;
 export function convertPublicKeyToSs58(publickey: Uint8Array) {
@@ -90,7 +75,7 @@ export async function deploy(
     salt: undefined,
   });
 
-  let result = await tx.signAndSubmit(signer);
+  const result = await tx.signAndSubmit(signer);
 
   // from this message, we can get the ss58 address of deployed contract.
   // System {
@@ -128,25 +113,25 @@ export async function deployEVM() {
 }
 
 async function deployLocal(client: PolkadotClient, name: string) {
-  let api = await getLocalApi(client);
+  const api = await getLocalApi(client);
   //  api.apis.ReviveApi.gas_price()
-  let signer = await getAlice();
+  const signer = await getAlice();
   await mapAccount(api, signer);
-  let result = await deploy(api, signer, name);
+  await deploy(api, signer, name);
 }
 
 async function deployAh(client: PolkadotClient, name: string) {
-  let api = await getAhApi(client);
+  const api = await getAhApi(client);
   // api.apis.ReviveApi.get_storage()
-  let signer = await getSignerAh();
-  let result = await deploy(api, signer, name);
+  const signer = await getSignerAh();
+  await deploy(api, signer, name);
 }
 
 async function main() {
   // let client = await getClient("http://127.0.0.1:9944")
   // await deployLocal(client, "erc20")
 
-  let client = await getClient("wss://westend-asset-hub-rpc.polkadot.io");
+  const client = await getClient("wss://westend-asset-hub-rpc.polkadot.io");
   await deployAh(client, "erc20");
 
   client.destroy();
@@ -169,14 +154,13 @@ function getErc20ConstructorInput() {
       type: "uint256",
       name: "decimals",
     },
-
     {
       type: "uint256",
       name: "totalSupply",
     },
   ], [
-    "name",
-    "symbol",
+    "aaaazzzz",
+    "bbbbyyyy",
     BigInt(18),
     BigInt(1e12),
   ]);

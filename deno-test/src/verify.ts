@@ -1,64 +1,62 @@
 // import { getPublicClient, getWalletClient, ClientUrl } from "./eth"
-import { encodeAbiParameters, parseAbiParameters } from "viem";
+import {getPublicClient} from "./eth.ts";
+import {ABI} from "./erc20.ts"
 
 async function main() {
-  // const publicClient = await getPublicClient(ClientUrl)
+  const publicClient = await getPublicClient("https://westend-asset-hub-eth-rpc.polkadot.io")
   // const walletClient = await getWalletClient(ClientUrl)
   // client.destroy()
 
-  // const deployedContract = getContract({ address: contractAddress, abi: ABI, client: walletClient })
-  // const tx2 = await deployedContract.write.transfer(["0x70997970C51812dc3A010C7d01b50e0d17dc79C8", 10000])
+  const erc20Address = "0x26E92ebE2F3cc939C517266f6A316440EaD55d8F"
+
+  await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "name",
+    args: [],
+  }).then((result) => {
+    console.log("result is ", result);
+  }).catch((error) => {
+    console.error("error is ", error);
+  });
+
+  await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "symbol",
+    args: [],
+  }).then((result) => {
+    console.log("result is ", result);
+  }).catch((error) => {
+    console.error("error is ", error);
+  });
+
+  await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "decimals",
+    args: [],
+  }).then((result) => {
+    console.log("result is ", result);
+  }).catch((error) => {
+    console.error("error is ", error);
+  });
+
+  await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "totalSupply",
+    args: [],
+  }).then((result) => {
+    
+    console.log("result is ", result);
+    const totalSupply = result as bigint;
+    console.log("totalSupply is ", totalSupply / BigInt(10 ** 18));
+  }).catch((error) => {
+    console.error("error is ", error);
+  });
+  
 }
 
-function splitIntoChunks(str: string, chunkSize: number = 64): string[] {
-  const chunks: string[] = [];
-
-  for (let i = 0; i < str.length; i += chunkSize) {
-    chunks.push(str.slice(i, i + chunkSize));
-  }
-
-  return chunks;
-}
-
-function notUsed() {
-  // const erc20Balance = await publicClient.readContract({ address: contractAddress, abi: ABI, functionName: "balanceOf", args: ["0x70997970C51812dc3A010C7d01b50e0d17dc79C8"] })
-
-  // console.log(`result is ${erc20Balance}`)
-
-  // input for selector contract
-  const constructorInput = encodeAbiParameters([
-    {
-      type: "string",
-      name: "owner",
-    },
-    {
-      type: "string",
-      name: "owner",
-    },
-    {
-      type: "uint256",
-      name: "totalSupply",
-    },
-
-    {
-      type: "uint256",
-      name: "totalSupply",
-    },
-  ], [
-    "12345678abcdefgh",
-    "12345678abcdefgh",
-    BigInt(1234567812345678),
-    BigInt(1234567812345678),
-    // BigInt(1234567812345678), BigInt(1234567812345678),
-  ]);
-
-  console.log("constructorInput is ", constructorInput);
-  const chunks = splitIntoChunks(constructorInput.replace("0x", ""));
-  console.log("chunks are ", chunks);
-  for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i];
-    console.log(`Chunk ${i + 1}: ${chunk}`);
-  }
-}
 
 main();

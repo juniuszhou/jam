@@ -8,11 +8,13 @@
     "npm:@polkadot/api@^15.1.1": "15.9.2_@polkadot+util@13.4.4_@polkadot+util-crypto@13.4.4__@polkadot+util@13.4.4__@polkadot+x-randomvalues@13.4.4___@polkadot+util@13.4.4___@polkadot+wasm-util@7.4.1____@polkadot+util@13.4.4__@polkadot+wasm-util@7.4.1___@polkadot+util@13.4.4",
     "npm:@polkadot/util-crypto@^13.4.4": "13.4.4_@polkadot+util@13.4.4_@polkadot+x-randomvalues@13.4.4__@polkadot+util@13.4.4__@polkadot+wasm-util@7.4.1___@polkadot+util@13.4.4_@polkadot+wasm-util@7.4.1__@polkadot+util@13.4.4",
     "npm:@polkadot/util@^13.4.4": "13.4.4",
+    "npm:@types/node@*": "22.12.0",
     "npm:crypto@^1.0.1": "1.0.1",
     "npm:dotenv@16.4.7": "16.4.7",
     "npm:ethers@^6.13.5": "6.13.5",
     "npm:polkadot-api@*": "1.9.13_rxjs@7.8.2_@polkadot-api+substrate-client@0.3.0_@polkadot-api+smoldot@0.3.8",
     "npm:polkadot-api@^1.9.13": "1.9.13_rxjs@7.8.2_@polkadot-api+substrate-client@0.3.0_@polkadot-api+smoldot@0.3.8",
+    "npm:process@*": "0.11.10",
     "npm:viem@2.23.4": "2.23.4_ws@8.18.0"
   },
   "jsr": {
@@ -1407,6 +1409,9 @@
       "dependencies": [
         "parse-ms"
       ]
+    },
+    "process@0.11.10": {
+      "integrity": "sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A=="
     },
     "propagate@2.0.1": {
       "integrity": "sha512-vGrhOavPSTz4QVNuBNdcNXePNdNMaO1xj9yBeH1ScQPjk/rhg9sSlCXPhMkFuaNNW/syTvYqsnbIJxMBfRbbag=="

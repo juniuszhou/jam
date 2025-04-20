@@ -1,14 +1,18 @@
 import { Address } from "viem";
 import { ss58Address } from "@polkadot-labs/hdkd-helpers";
 import { hexToU8a } from "@polkadot/util";
-import { blake2AsU8a, decodeAddress, encodeAddress } from "@polkadot/util-crypto";
+import {
+  blake2AsU8a,
+  decodeAddress,
+  encodeAddress,
+} from "@polkadot/util-crypto";
 import { Binary } from "polkadot-api";
 import { getAddress } from "viem";
 import { Buffer } from "node:buffer";
 const SS58_PREFIX = 42;
 
 export function toViemAddress(address: string): Address {
-  let addressNoPrefix = address.replace("0x", "");
+  const addressNoPrefix = address.replace("0x", "");
   return `0x${addressNoPrefix}`;
 }
 

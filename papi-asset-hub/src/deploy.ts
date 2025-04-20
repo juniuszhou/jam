@@ -160,11 +160,12 @@ function getErc20ConstructorInput() {
   const constructorInput = encodeAbiParameters([
     {
       type: "string",
-      name: "name",
+      // much easier to recognize the name in hex format
+      name: "aaaazzzz",
     },
     {
       type: "string",
-      name: "symbol",
+      name: "bbbbyyyy",
     },
     {
       type: "uint256",

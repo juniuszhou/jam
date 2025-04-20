@@ -5,12 +5,14 @@ import {
   getContract,
   http,
   publicActions,
+  PublicClient,
 } from "viem";
-import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
+import { privateKeyToAccount } from "viem/accounts";
 import { ethers } from "ethers";
 import { config } from "dotenv";
+import {ABI} from "./erc20.ts"
 
-export const EThClientUrl = "https://westend-asset-hub-eth-rpc.polkadot.io";
+export type EThClientUrl = "https://westend-asset-hub-eth-rpc.polkadot.io" | "http//127.0.1:8545"
 
 export const ahChain = (url: string) =>
   defineChain({
@@ -30,18 +32,18 @@ export const ahChain = (url: string) =>
     testnet: true,
   });
 
-export async function getPublicClient(url: string) {
-  const wallet = createPublicClient({
+export function getPublicClient(url: EThClientUrl) {
+  const client = createPublicClient({
     chain: ahChain(url),
     transport: http(),
-  });
+  })
 
-  return wallet.extend(publicActions);
+  return client
 }
 
-export async function getWalletClient(url: string) {
+export function getWalletClient(url: EThClientUrl) {
   config();
-  const privateKey = process.env.PRIVATE_KEY || "";
+  const privateKey = Deno.env.get("PRIVATE_KEY") || "";
   const account = privateKeyToAccount(`0x${privateKey}`);
   const wallet = createWalletClient({
     account,
@@ -54,17 +56,13 @@ export async function getWalletClient(url: string) {
 export async function getStorage() {
 }
 
-async function main() {
-  const publicClient = await getPublicClient(EThClientUrl);
-  const walletClient = await getWalletClient(EThClientUrl);
-  // client.destroy()
-
-  // const deployedContract = getContract({ address: contractAddress, abi: ABI, client: walletClient })
-  // const tx2 = await deployedContract.write.transfer(["0x70997970C51812dc3A010C7d01b50e0d17dc79C8", 10000])
-
-  // const erc20Balance = await publicClient.readContract({ address: contractAddress, abi: ABI, functionName: "balanceOf", args: ["0x70997970C51812dc3A010C7d01b50e0d17dc79C8"] })
-
-  // console.log(`result is ${erc20Balance}`)
+export function getERC20Contract(client: PublicClient) {
+  // erc20 contract address
+  const contractAddress = "0x029E8b232e5A058a1e6f1C122614c3D6a6fBA53E";
+  const contract = getContract({
+    address: contractAddress,
+    abi: ABI,
+    client,
+  })
+  return contract
 }
-
-main();
