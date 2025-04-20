@@ -2,7 +2,7 @@
 #![no_std]
 
 // use alloc::collections::HashMap;
-use uapi::{input, output, u64_output, HostFn, HostFnImpl as api, ReturnFlags, StorageFlags};
+use uapi::{input, output, HostFn, HostFnImpl as api, ReturnFlags, StorageFlags};
 
 const NAME: &[u8] = b"name";
 const SYMBOL: &[u8] = b"symbol";
@@ -36,9 +36,15 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 pub extern "C" fn deploy() {
     input!(data: &[u8; 256],);
     let length = api::call_data_size();
+
+    // let a = [0_u8; length];
+
     if length > 256 {
         panic!("Input data too long");
     }
+
+    let mut sender = [0_u8; 20];
+    api::caller(&mut sender);
 
     let mut decimals = [0u8; 32];
     let mut total_supply = [0u8; 32];
@@ -67,6 +73,8 @@ pub extern "C" fn deploy() {
     api::set_storage(StorageFlags::empty(), DECIMALS, &data[64..96]);
     // // 16 for total_supply
     api::set_storage(StorageFlags::empty(), TOTAL_SUPPLY, &total_supply[..]);
+
+    set_balance(&sender, supply);
 }
 
 /// This is the regular entry point when the contract is called.
@@ -78,6 +86,9 @@ pub extern "C" fn call() {
     if length > 256 {
         panic!("Input data too long");
     }
+    let mut sender = [0_u8; 20];
+    api::caller(&mut sender);
+
     match selector {
         // 0x06fdde03 selector for name()
         &[6, 253, 222, 3] => api::return_value(ReturnFlags::empty(), &get_name()),
@@ -90,6 +101,19 @@ pub extern "C" fn call() {
 
         // 0x18160ddd for totalSupply()
         &[24, 22, 13, 221] => api::return_value(ReturnFlags::empty(), &get_total_supply()),
+
+        // 0x70a08231 for balanceOf(address)
+        &[112, 160, 130, 49] => {
+            input!(buffer: &[u8; 36],);
+            let mut address = [0_u8; 20];
+            // api::call_data_copy(&mut address, 0);
+            address.copy_from_slice(&buffer[16..36]);
+            let balance = get_balance(&address);
+            // let balance = 123_456_789_012_345_678_901_234_567_890_u128;
+            // let mut result = [0_u8; 32];
+            // result[16..32].copy_from_slice(&balance.to_be_bytes());
+            api::return_value(ReturnFlags::empty(), &balance[..]);
+        }
         _ => panic!("Unknown function"),
     }
 }
@@ -121,4 +145,68 @@ pub fn get_total_supply() -> [u8; 32] {
     )
     .unwrap();
     supply
+}
+
+pub fn get_balance_key(sender: &[u8; 20]) -> [u8; 27] {
+    let mut key = [0u8; 27];
+    key[0..7].copy_from_slice(BALANCE);
+    key[7..27].copy_from_slice(sender);
+    key
+}
+
+pub fn get_balance_u128(sender: &[u8; 20]) -> u128 {
+    let key = get_balance_key(sender);
+    let mut balance = [0u8; 32];
+    let result = api::get_storage(StorageFlags::empty(), &key, &mut &mut balance[..]);
+    match result {
+        Ok(_) => {
+            let mut data = [0u8; 16];
+            data.copy_from_slice(&balance[16..32]);
+            u128::from_be_bytes(data)
+        }
+        Err(_) => 0,
+    }
+}
+
+pub fn get_balance(sender: &[u8; 20]) -> [u8; 32] {
+    let key = get_balance_key(sender);
+    let mut balance = [0u8; 32];
+    api::get_storage(StorageFlags::empty(), &key, &mut &mut balance[..]).unwrap();
+    return balance;
+}
+
+pub fn set_balance(sender: &[u8; 20], balance: u128) {
+    let key = get_balance_key(sender);
+    let mut data = [0u8; 32];
+    data[16..32].copy_from_slice(&balance.to_be_bytes());
+    api::set_storage(StorageFlags::empty(), &key, &data[..]);
+}
+
+pub fn get_allownance_key(sender: &[u8; 20], spender: &[u8; 20]) -> [u8; 49] {
+    let mut key = [0u8; 49];
+    key[0..9].copy_from_slice(ALLOWANCE);
+    key[9..29].copy_from_slice(sender);
+    key[29..49].copy_from_slice(spender);
+    key
+}
+
+pub fn get_allownance(sender: &[u8; 20], spender: &[u8; 20]) -> u128 {
+    let key = get_allownance_key(sender, spender);
+    let mut balance = [0u8; 32];
+    let result = api::get_storage(StorageFlags::empty(), &key, &mut &mut balance[..]);
+    match result {
+        Ok(_) => {
+            let mut data = [0u8; 16];
+            data.copy_from_slice(&balance[16..32]);
+            u128::from_be_bytes(data)
+        }
+        Err(_) => 0,
+    }
+}
+
+pub fn set_allownance(sender: &[u8; 20], spender: &[u8; 20]) {
+    let key = get_allownance_key(sender, spender);
+    let mut data = [0u8; 32];
+    data[16..32].copy_from_slice(&0u128.to_be_bytes());
+    api::set_storage(StorageFlags::empty(), &key, &data[..]).unwrap();
 }

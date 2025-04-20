@@ -1,13 +1,21 @@
 // import { getPublicClient, getWalletClient, ClientUrl } from "./eth"
-import {getPublicClient} from "./eth.ts";
+import {getPublicClient, getWalletClient} from "./eth.ts";
 import {ABI} from "./erc20.ts"
 
 async function main() {
   const publicClient = await getPublicClient("https://westend-asset-hub-eth-rpc.polkadot.io")
-  // const walletClient = await getWalletClient(ClientUrl)
+  const walletClient = await getWalletClient("https://westend-asset-hub-eth-rpc.polkadot.io")
   // client.destroy()
 
-  const erc20Address = "0x26E92ebE2F3cc939C517266f6A316440EaD55d8F"
+  const myAddress = walletClient.account.address;
+  const validAddress = myAddress.replace("0x", "");
+  if (!myAddress) {
+    throw new Error("No address found");
+  }
+
+  console.log("my address is ", myAddress);
+  console.log("balance is ", await publicClient.getBalance({address:`0x${validAddress}`}))
+  const erc20Address = "0xaff96F4fF2D9d0f6aA39672Cb496B49dd3096f15"
 
   await publicClient.readContract({
     address: erc20Address,
@@ -52,6 +60,20 @@ async function main() {
     console.log("result is ", result);
     const totalSupply = result as bigint;
     console.log("totalSupply is ", totalSupply / BigInt(10 ** 18));
+  }).catch((error) => {
+    console.error("error is ", error);
+  });
+
+  await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "balanceOf",
+    args: [myAddress],
+  }).then((result) => {
+    
+    console.log("result is ", result);
+    const totalSupply = result as bigint;
+    console.log("balanceOf is ", totalSupply / BigInt(10 ** 18));
   }).catch((error) => {
     console.error("error is ", error);
   });
