@@ -9,8 +9,6 @@ const SYMBOL: &[u8] = b"symbol";
 const DECIMALS: &[u8] = b"decimals";
 const TOTAL_SUPPLY: &[u8] = b"total_supply";
 
-const DUMMY: &[u8] = b"dummy";
-
 const BALANCE: &[u8] = b"balance";
 const ALLOWANCE: &[u8] = b"allowance";
 
@@ -54,12 +52,15 @@ pub extern "C" fn deploy() {
     decimals.copy_from_slice(&data[64..96]);
     total_supply.copy_from_slice(&data[96..128]);
 
-    let decimal_u64 = u64::from_be_bytes(data[88..96].try_into().unwrap());
-    let total_supply_u64 = u64::from_be_bytes(data[120..128].try_into().unwrap());
+    // let decimal_u64 = u64::from_be_bytes(data[88..96].try_into().unwrap());
+    // let total_supply_u64 = u64::from_be_bytes(data[120..128].try_into().unwrap());
 
-    let supply: u128 = 10u128.pow(decimal_u64 as u32) * total_supply_u64 as u128;
-    let mut total_supply = [0u8; 32];
-    total_supply[16..32].copy_from_slice(&supply.to_be_bytes());
+    // let supply: u128 = 10u128.pow(decimal_u64 as u32) * total_supply_u64 as u128;
+
+    // let supply = 0_u128;
+    // hard code supply as zero since we can't get the sender of eth if deploy contract
+    let total_supply = [0u8; 32];
+    // total_supply[16..32].copy_from_slice(&supply.to_be_bytes());
 
     let mut string_storage = [0u8; 96];
     string_storage[31] = 0x20;
@@ -75,12 +76,6 @@ pub extern "C" fn deploy() {
     api::set_storage(StorageFlags::empty(), DECIMALS, &data[64..96]);
     // // 16 for total_supply
     api::set_storage(StorageFlags::empty(), TOTAL_SUPPLY, &total_supply[..]);
-
-    set_dummy(sender);
-
-    // set_balance(&sender, supply);
-
-    // set_balance_bytes(&sender, &total_supply);
 }
 
 /// This is the regular entry point when the contract is called.
@@ -122,7 +117,6 @@ pub extern "C" fn call() {
             // api::call_data_copy(&mut address, 0);
             address.copy_from_slice(&buffer[16..36]);
             // let balance = get_balance(&address);
-            // let balance = get_dummy();
             let mut balance = [0_u8; 32];
             balance[12..32].copy_from_slice(&sender[..]);
             // let balance = 123_456_789_012_345_678_901_234_567_890_u128;
@@ -130,19 +124,20 @@ pub extern "C" fn call() {
             // result[16..32].copy_from_slice(&balance.to_be_bytes());
             api::return_value(ReturnFlags::empty(), &balance[..]);
         }
-        // 0x40c10f19 for mint(address,uint256)
-        &[64, 193, 15, 25] => {
-            input!(buffer: &[u8; 4+32+32],);
+        // mint(uint256)
+        // 0x40c10f19 for mint(address,uint256,bytes)
+        // 0xa0712d68 for mint(uint256)
+        &[160, 177, 45, 104] => {
+            input!(buffer: &[u8; 36],);
             let mut address = [0_u8; 20];
-            address.copy_from_slice(&buffer[16..36]);
+            api::origin(&mut address);
 
             let mut amount = [0_u8; 32];
-            amount.copy_from_slice(&buffer[36..68]);
+            amount.copy_from_slice(&buffer[4..36]);
 
             let mut data = [0_u8; 32];
             data.copy_from_slice(&buffer[56..88]);
             // let balance = get_balance(&address);
-            // let balance = get_dummy();
             // let mut balance = [0_u8; 32];
             // balance.copy_from_slice(&buffer[4..36]);
             // let balance = 123_456_789_012_345_678_901_234_567_890_u128;
@@ -254,16 +249,4 @@ pub fn set_allownance(sender: &[u8; 20], spender: &[u8; 20]) {
     let mut data = [0u8; 32];
     data[16..32].copy_from_slice(&0u128.to_be_bytes());
     api::set_storage(StorageFlags::empty(), &key, &data[..]).unwrap();
-}
-
-pub fn get_dummy() -> [u8; 32] {
-    let mut decimal = [0u8; 32];
-    api::get_storage(uapi::StorageFlags::empty(), DUMMY, &mut &mut decimal[..]).unwrap();
-    decimal
-}
-
-pub fn set_dummy(dummy: [u8; 20]) {
-    let mut data = [0u8; 32];
-    data[12..32].copy_from_slice(&dummy);
-    api::set_storage(uapi::StorageFlags::empty(), DUMMY, &data[..]);
 }

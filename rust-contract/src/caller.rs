@@ -17,6 +17,7 @@ const CALLER: &[u8] = b"caller";
 const ORIGIN: &[u8] = b"origin";
 
 /// This is the constructor which is called once per contract.
+/// If you use the ss58 account to deploy the contract, the caller and origin will be the same.
 #[no_mangle]
 #[polkavm_derive::polkavm_export]
 pub extern "C" fn deploy() {

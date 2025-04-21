@@ -2,89 +2,13 @@ export const ABI = [
     {
         "inputs": [
             {
-                "internalType": "string",
-                "name": "_name",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_symbol",
-                "type": "string"
-            },
-            {
-                "internalType": "uint8",
-                "name": "_decimals",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_initialSupply",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
                 "internalType": "address",
                 "name": "owner",
                 "type": "address"
             },
             {
-                "indexed": true,
                 "internalType": "address",
                 "name": "spender",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256"
-            }
-        ],
-        "name": "Approval",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256"
-            }
-        ],
-        "name": "Transfer",
-        "type": "event"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "",
                 "type": "address"
             }
         ],
@@ -103,12 +27,12 @@ export const ABI = [
         "inputs": [
             {
                 "internalType": "address",
-                "name": "_spender",
+                "name": "spender",
                 "type": "address"
             },
             {
                 "internalType": "uint256",
-                "name": "_value",
+                "name": "amount",
                 "type": "uint256"
             }
         ],
@@ -116,7 +40,7 @@ export const ABI = [
         "outputs": [
             {
                 "internalType": "bool",
-                "name": "success",
+                "name": "",
                 "type": "bool"
             }
         ],
@@ -127,7 +51,7 @@ export const ABI = [
         "inputs": [
             {
                 "internalType": "address",
-                "name": "",
+                "name": "account",
                 "type": "address"
             }
         ],
@@ -147,12 +71,31 @@ export const ABI = [
         "name": "decimals",
         "outputs": [
             {
-                "internalType": "uint8",
+                "internalType": "uint256",
                 "name": "",
-                "type": "uint8"
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "mint",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -198,12 +141,12 @@ export const ABI = [
         "inputs": [
             {
                 "internalType": "address",
-                "name": "_to",
+                "name": "recipient",
                 "type": "address"
             },
             {
                 "internalType": "uint256",
-                "name": "_value",
+                "name": "amount",
                 "type": "uint256"
             }
         ],
@@ -211,7 +154,7 @@ export const ABI = [
         "outputs": [
             {
                 "internalType": "bool",
-                "name": "success",
+                "name": "",
                 "type": "bool"
             }
         ],
@@ -222,17 +165,17 @@ export const ABI = [
         "inputs": [
             {
                 "internalType": "address",
-                "name": "_from",
+                "name": "sender",
                 "type": "address"
             },
             {
                 "internalType": "address",
-                "name": "_to",
+                "name": "recipient",
                 "type": "address"
             },
             {
                 "internalType": "uint256",
-                "name": "_value",
+                "name": "amount",
                 "type": "uint256"
             }
         ],
@@ -240,7 +183,7 @@ export const ABI = [
         "outputs": [
             {
                 "internalType": "bool",
-                "name": "success",
+                "name": "",
                 "type": "bool"
             }
         ],
