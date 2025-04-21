@@ -43,9 +43,10 @@ export function getPublicClient(url: EThClientUrl) {
 
 export function getWalletClient(url: EThClientUrl) {
   config();
-  // const privateKey = Deno.env.get("AH_PRIVATE_KEY") || "";
-  const privateKey = "af4f69eb98125129fb83cbf12ac15737e65ef169bdd02544ea087a216fb92b14"
-  const account = privateKeyToAccount(`0x${privateKey}`);
+  console.log("AH pirvate key is ",  process.env.AH_PRIV_KEY);
+  const privateKey = process.env.AH_PRIV_KEY || "";
+  const validPrivateKey = privateKey.replace("0x", "");
+  const account = privateKeyToAccount(`0x${validPrivateKey}`);
   const wallet = createWalletClient({
     account,
     chain: ahChain(url),

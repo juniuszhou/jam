@@ -98,3 +98,18 @@ contract getERC20 {
         data = resultInMemory;
     }
 }
+
+contract getCaller {
+    bytes public data;
+    function getValue() public {
+        address precompile = address(0xd21a6b9a306a5C907A5b47A1a771c353B2Ff38e8);
+
+        bool success;
+        bytes memory resultInMemory;
+        //select name
+        bytes memory input = hex"";
+        // just all it without selector
+        (success, resultInMemory) = precompile.call{value: 0}(input);
+        data = resultInMemory;
+    }
+}

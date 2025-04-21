@@ -62,7 +62,8 @@ export async function deploy(
   const tx = api.tx.Revive.instantiate_with_code({
     // input for constructor
     // data: Binary.fromHex("0x1234567812345678"),
-    data: Binary.fromHex(constructorInput),
+    // data: Binary.fromHex(constructorInput),
+    data: Binary.fromHex("0x"),
     value: BigInt(0),
     gas_limit: {
       // computation cost
@@ -132,7 +133,7 @@ async function main() {
   // await deployLocal(client, "erc20")
 
   const client = await getClient("wss://westend-asset-hub-rpc.polkadot.io");
-  await deployAh(client, "erc20");
+  await deployAh(client, "caller");
 
   client.destroy();
 }
