@@ -11,12 +11,12 @@ import { privateKeyToAccount } from "viem/accounts";
 import { ethers } from "ethers";
 import { config } from "dotenv";
 import {ABI} from "./erc20.ts"
-
+import process from "node:process";
 export type EThClientUrl = "https://westend-asset-hub-eth-rpc.polkadot.io" | "http//127.0.1:8545"
 
 export const ahChain = (url: string) =>
   defineChain({
-    id: 420_420_420,
+    id: 420420421,
     name: "Testnet",
     network: "Testnet",
     nativeCurrency: {
@@ -67,4 +67,13 @@ export function getERC20Contract(client: PublicClient) {
     client,
   })
   return contract
+}
+
+export function getEtherClient(url: EThClientUrl) {
+  const provider = new ethers.JsonRpcProvider(url);
+  config();
+  const privateKey = process.env.AH_PRIV_KEY || "";
+
+    const wallet = new ethers.Wallet(privateKey, provider);
+    return wallet;
 }
