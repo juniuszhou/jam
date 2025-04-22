@@ -20,6 +20,8 @@ deploy
 npx hardhat deploy-revive --contract SimpleERC20 --network ah --args a,b,18,10000000
 
 npx hardhat deploy-revive --contract Lock --network ah --args 10000000000
+
+npx hardhat deploy-revive --contract caller --network ah
 ```
 
 compile

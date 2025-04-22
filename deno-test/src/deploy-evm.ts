@@ -27,11 +27,16 @@ async function deployWithEthers(name: string) {
   console.log("my address is ", myAddress);
   const bytecode = getBytecode(name);
 
+  // ethers.getDeployTransaction({
+
   const factory = new ethers.ContractFactory(ABI, bytecode, etherWallet )
   const contract = await factory.deploy("aaaazzzz",
       "bbbbyyyy",
       BigInt(18),
       BigInt(1e12))
+
+  // const contract = await factory.deploy()
+
   await contract.waitForDeployment();
   const contractAddress = contract.target.toString()
   console.log("contract address is ", contractAddress);

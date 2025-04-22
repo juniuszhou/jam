@@ -15,7 +15,7 @@ async function main() {
 
   console.log("my address is ", myAddress);
   console.log("balance is ", await publicClient.getBalance({address:`0x${validAddress}`}))
-  const erc20Address = "0xbf81549f52893A41D1614Fd0A0986636091E1A8D"
+  const erc20Address = "0xB5bE8AB95565E5c6916bAbF16F604357630c69a0"
 
   await publicClient.readContract({
     address: erc20Address,
@@ -72,8 +72,8 @@ async function main() {
   }).then((result) => {
     
     console.log("result is ", result);
-    // const totalSupply = result as bigint;
-    // console.log("balanceOf is ", totalSupply / BigInt(10 ** 18));
+    const totalSupply = result as bigint;
+    console.log("balanceOf is ", totalSupply / BigInt(10 ** 18));
   }).catch((error) => {
     console.error("error is ", error);
   });

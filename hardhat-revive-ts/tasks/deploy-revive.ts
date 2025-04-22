@@ -6,7 +6,7 @@ import { join } from 'path'
 
 task("deploy-revive", "Deploys a contract")
   .addParam("contract", "The contract name")
-  .addParam("args", "Constructor arguments (comma-separated)")
+  // .addParam("args", "Constructor arguments (comma-separated)")
   .setAction(async (taskArgs, hre) => {
     const [deployer] = await hre.ethers.getSigners();
     console.log("Deploying with:", deployer.address);
@@ -16,19 +16,20 @@ task("deploy-revive", "Deploys a contract")
     try {
       const abi = JSON.parse(
         readFileSync(
-          join("artifacts", "contracts", contractName, `${contractName}.json`),
+          join("abis", `${contractName}.json`),
           "utf8"
         )
       );
       const bytecode = `0x${readFileSync(
-        join("artifacts", "contracts", contractName, `${contractName}.polkavm`)
+        join("../", "rust-contract/", `${contractName}.polkavm`)
       ).toString("hex")}`;
 
       // Create contract factory and deploy
       const factory = new hre.ethers.ContractFactory(abi, bytecode, deployer);
 
       // Log constructor args to verify
-      const constructorArgs = taskArgs.args.split(",");
+      // const constructorArgs = taskArgs.args.split(",");
+      const constructorArgs: [] = []
       console.log("Constructor Arguments:", constructorArgs);
 
       const contract = await factory.deploy(...constructorArgs);

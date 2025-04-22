@@ -102,7 +102,7 @@ contract getERC20 {
 contract getCaller {
     bytes public data;
     function getValue() public {
-        address precompile = address(0xd21a6b9a306a5C907A5b47A1a771c353B2Ff38e8);
+        address precompile = address(0x85c3512EB43153EaD8D9B0f4B4d8a1CDFc2Ef047);
 
         bool success;
         bytes memory resultInMemory;

@@ -12,6 +12,8 @@ deno install
 
 ```bash
 deno task deploy
+
+deno task deploy-evm
 ```
 
 ## get metadata

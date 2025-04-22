@@ -3,7 +3,6 @@ import "@nomicfoundation/hardhat-ignition"
 
 import "hardhat-resolc"
 import { config } from "dotenv"
-import "./tasks/compile-revive"
 import "./tasks/deploy-revive"
 
 config()
