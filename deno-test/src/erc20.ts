@@ -198,3 +198,6 @@ export const ABI = [
         "type": "function"
     }
 ];
+
+export const EMPTY_ABI = [
+]

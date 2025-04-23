@@ -176,7 +176,7 @@ pub extern "C" fn call() {
 
             let current_allowance = get_allownance_u128(&sender, &address);
             let allowance_after_approve = current_allowance + approve_balance;
-            set_allownance(&sender, &address, allowance_after_approve);
+            set_allownance_u128(&sender, &address, allowance_after_approve);
 
             let mut data = [0_u8; 32];
             data.copy_from_slice(&buffer[68..100]);
@@ -185,14 +185,30 @@ pub extern "C" fn call() {
         // transferFrom(address,address,uint256)
         // 0x23b872dd
         &[35, 184, 114, 221] => {
-            input!(buffer: &[u8; 36],);
-            let mut address = [0_u8; 20];
-            address.copy_from_slice(&buffer[16..36]);
-            let mut amount = [0_u8; 32];
-            amount.copy_from_slice(&buffer[36..68]);
-            let mut data = [0_u8; 32];
-            data.copy_from_slice(&buffer[68..100]);
-            api::return_value(ReturnFlags::empty(), &data[..]);
+            input!(buffer: &[u8; 4 + 32 + 32 + 32],);
+
+            let mut spender = [0_u8; 20];
+            spender.copy_from_slice(&buffer[16..36]);
+
+            let mut recipient = [0_u8; 20];
+            recipient.copy_from_slice(&buffer[48..68]);
+
+            let mut amount = [0_u8; 16];
+            amount.copy_from_slice(&buffer[84..100]);
+
+            let current_allowance = get_allownance_u128(&spender, &recipient);
+            let transfer_balance = u128::from_be_bytes(amount);
+            if current_allowance < transfer_balance {
+                panic!("Insufficient allowance");
+            }
+            let balance_after_transfer = current_allowance - transfer_balance;
+
+            let recipient_balance = get_balance_u128(&recipient);
+            let balance_after_recieve = recipient_balance + transfer_balance;
+
+            // update balance and allowance
+            set_balance_u128(&recipient, balance_after_recieve);
+            set_allownance_u128(&sender, &spender, balance_after_transfer);
         }
 
         _ => panic!("Unknown function"),
@@ -286,7 +302,7 @@ pub fn get_allownance_bytes(sender: &[u8; 20], spender: &[u8; 20]) -> [u8; 16] {
     balance
 }
 
-pub fn set_allownance(sender: &[u8; 20], spender: &[u8; 20], allowance: u128) {
+pub fn set_allownance_u128(sender: &[u8; 20], spender: &[u8; 20], allowance: u128) {
     let key = get_allownance_key(sender, spender);
     api::set_storage(StorageFlags::empty(), &key, &allowance.to_be_bytes()).unwrap();
 }

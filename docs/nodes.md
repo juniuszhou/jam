@@ -28,7 +28,7 @@ RUST_LOG="evm=debug,sc_rpc_server=info,runtime::revive=debug" cargo run --bin su
 OR
 
 ```bash
-RUST_LOG="evm=debug,sc_rpc_server=info,runtime::revive=debug" target/release/substrate-node --dev --tmp --unsafe-rpc-external
+RUST_LOG="evm=debug,sc_rpc_server=info,runtime::revive=debug,polkavm=debug" target/release/substrate-node --dev --tmp --unsafe-rpc-external
 ```
 
 ```bash
@@ -40,3 +40,13 @@ OR
 ```bash
 RUST_LOG="info,eth-rpc=debug" target/release/eth-rpc
 ```
+
+## debug
+
+log list:
+
+runtime::revive
+
+polkavm::api
+
+polkavm::interpreter

@@ -1,6 +1,6 @@
 // import { getPublicClient, getWalletClient, ClientUrl } from "./eth"
 import {getPublicClient, getWalletClient} from "./eth.ts";
-import {ABI} from "./erc20.ts"
+import {ABI, EMPTY_ABI} from "./erc20.ts"
 import { getEtherClient } from "./eth.ts";
 
 import { ethers } from "ethers";
@@ -27,15 +27,17 @@ async function deployWithEthers(name: string) {
   console.log("my address is ", myAddress);
   const bytecode = getBytecode(name);
 
-  // ethers.getDeployTransaction({
+  // const factory = new ethers.ContractFactory(EMPTY_ABI, bytecode, etherWallet)
+  // const contract = await factory.deploy()
 
   const factory = new ethers.ContractFactory(ABI, bytecode, etherWallet )
+
   const contract = await factory.deploy("aaaazzzz",
       "bbbbyyyy",
       BigInt(18),
       BigInt(1e12))
 
-  // const contract = await factory.deploy()
+  
 
   await contract.waitForDeployment();
   const contractAddress = contract.target.toString()

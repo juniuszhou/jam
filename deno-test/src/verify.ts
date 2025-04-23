@@ -15,7 +15,7 @@ async function main() {
 
   console.log("my address is ", myAddress);
   console.log("balance is ", await publicClient.getBalance({address:`0x${validAddress}`}))
-  const erc20Address = "0xB5bE8AB95565E5c6916bAbF16F604357630c69a0"
+  const erc20Address = "0x9c3e0207091eccF1756E306c2f1cd1F828fb5D53"
 
   await publicClient.readContract({
     address: erc20Address,
