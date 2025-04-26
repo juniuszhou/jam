@@ -1,0 +1,138 @@
+// import { getPublicClient, getWalletClient, ClientUrl } from "./eth"
+import {getPublicClient, getWalletClient, generateRandomEthersWallet, getEtherClient} from "./eth.ts";
+import {ABI} from "./erc20.ts"
+import { assert } from "node:console";
+import { PublicClient } from "viem";
+import { identity } from "@polkadot/util/noop";
+
+async function main() {
+  const url = "https://westend-asset-hub-eth-rpc.polkadot.io";
+  // const url = "http://127.0.0.1:8545"
+  // const id = 420420421
+
+  // const publicClient = await getPublicClient(url, id)
+  // const walletClient = await getWalletClient(url, id)
+  // client.destroy()
+
+  const walletClient = await getEtherClient(url);
+  const randomWalletClient = await generateRandomEthersWallet(url);
+
+  const myAddress = walletClient.account.address;
+  const validAddress = myAddress.replace("0x", "");
+  if (!myAddress) {
+    throw new Error("No address found");
+  }
+
+  console.log("my address is ", myAddress);
+  console.log("balance is ", await publicClient.getBalance({address:`0x${validAddress}`}))
+  const erc20Address = "0xB4340eC49CcED063FC6b8d2625CEC64D10173B33"
+
+  await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "name",
+    args: [],
+  }).then((result) => {
+    console.log("result is ", result);
+  }).catch((error) => {
+    console.error("error is ", error);
+  });
+
+  await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "symbol",
+    args: [],
+  }).then((result) => {
+    console.log("result is ", result);
+  }).catch((error) => {
+    console.error("error is ", error);
+  });
+
+  await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "decimals",
+    args: [],
+  }).then((result) => {
+    console.log("result is ", result);
+  }).catch((error) => {
+    console.error("error is ", error);
+  });
+
+  await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "totalSupply",
+    args: [],
+  }).then((result) => {
+    
+    console.log("result is ", result);
+    const totalSupply = result as bigint;
+    console.log("totalSupply is ", totalSupply / BigInt(10 ** 18));
+  }).catch((error) => {
+    console.error("error is ", error);
+  });
+
+  console.log("==========================");
+
+  await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "balanceOf",
+    args: [myAddress],
+  }).then((result) => {
+    
+    console.log("result is ", result);
+    const totalSupply = result as bigint;
+    console.log("balanceOf is ", totalSupply / BigInt(10 ** 18));
+  }).catch((error) => {
+    console.error("error is ", error);
+  });
+
+  const randomAccountBalance = await publicClient.readContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "balanceOf",
+    args: [randomWalletClient.address],})
+
+  console.log("randomAccountBalance is ", randomAccountBalance);
+  assert(randomAccountBalance == 0n, "randomAccountBalance should be 0");
+
+  // test transfer
+  const amount = 1000n;
+  await walletClient.writeContract({
+    address: erc20Address,
+    abi: ABI,
+    functionName: "transfer",
+    args: [randomWalletClient.address, amount],
+    account: myAddress,
+    value: 0n,
+    gas: 10000000n,
+    maxFeePerGas: 1000000000n,
+    maxPriorityFeePerGas: 1000000000n,
+  });
+
+  console.log("after transfer balance is " + await getBalance(publicClient, erc20Address, myAddress) );
+
+  console.log("after transfer balance is " + await getBalance(publicClient, erc20Address, randomWalletClient.address) );
+
+  // test approve 
+
+  // test transferFrom
+  
+}
+
+async function getBalance(client: PublicClient, contractAddress: string, walletAddress: string) {
+  const validAddress = contractAddress.replace("0x", "");
+  const balance = await client.readContract({
+    address: `0x${validAddress}`,
+    abi: ABI,
+    functionName: "balanceOf",
+    args: [walletAddress],})
+  
+  return balance as bigint
+
+}
+
+main();

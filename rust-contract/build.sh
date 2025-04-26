@@ -6,7 +6,7 @@ cd "${0%/*}/"
 cargo build --release
 
 # Define an array of binary names
-binaries=("main" "double" "fibonacci" "storage" "constructor" "immutable" "selector" "erc20" "caller")
+binaries=("main" "double" "fibonacci" "storage" "constructor" "immutable" "selector" "erc20" "caller" "attack")
 
 # Loop through each binary and create the .polkavm file
 for binary in "${binaries[@]}"; do

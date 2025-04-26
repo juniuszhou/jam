@@ -111,7 +111,9 @@ pub extern "C" fn call() {
             let mut address = [0_u8; 20];
             address.copy_from_slice(&buffer[16..36]);
             let balance = get_balance_bytes(&address);
-            api::return_value(ReturnFlags::empty(), &balance[..]);
+            let mut result = [0u8; 32];
+            result[16..32].copy_from_slice(&balance[..]);
+            api::return_value(ReturnFlags::empty(), &result[..]);
         }
         //allowance(address,address)
         // 0xdd62ed3e
@@ -153,6 +155,7 @@ pub extern "C" fn call() {
 
             let balance_after_transfer = to_balance + transfer_balance;
             set_balance_u128(&to_address, balance_after_transfer);
+            api::return_value(ReturnFlags::empty(), &[0_u8; 32]);
         }
         // approve(address,uint256)
         // 0x095ea7b3
@@ -176,11 +179,9 @@ pub extern "C" fn call() {
 
             let current_allowance = get_allownance_u128(&sender, &address);
             let allowance_after_approve = current_allowance + approve_balance;
-            set_allownance_u128(&sender, &address, allowance_after_approve);
 
-            let mut data = [0_u8; 32];
-            data.copy_from_slice(&buffer[68..100]);
-            api::return_value(ReturnFlags::empty(), &data[..]);
+            set_allownance_u128(&sender, &address, allowance_after_approve);
+            api::return_value(ReturnFlags::empty(), &[0_u8; 32]);
         }
         // transferFrom(address,address,uint256)
         // 0x23b872dd
@@ -208,7 +209,8 @@ pub extern "C" fn call() {
 
             // update balance and allowance
             set_balance_u128(&recipient, balance_after_recieve);
-            set_allownance_u128(&sender, &spender, balance_after_transfer);
+            set_allownance_u128(&spender, &recipient, balance_after_transfer);
+            api::return_value(ReturnFlags::empty(), &[0_u8; 32]);
         }
 
         _ => panic!("Unknown function"),
@@ -252,23 +254,14 @@ pub fn get_balance_key(sender: &[u8; 20]) -> [u8; 27] {
 }
 
 pub fn get_balance_u128(sender: &[u8; 20]) -> u128 {
-    let key = get_balance_key(sender);
-    let mut balance = [0u8; 32];
-    let result = api::get_storage(StorageFlags::empty(), &key, &mut &mut balance[..]);
-    match result {
-        Ok(_) => {
-            let mut data = [0u8; 16];
-            data.copy_from_slice(&balance[16..32]);
-            u128::from_be_bytes(data)
-        }
-        Err(_) => 0,
-    }
+    let bytes = get_balance_bytes(sender);
+    u128::from_be_bytes(bytes)
 }
 
 pub fn get_balance_bytes(sender: &[u8; 20]) -> [u8; 16] {
     let key = get_balance_key(sender);
-    let mut balance = [0u8; 32];
-    api::get_storage(StorageFlags::empty(), &key, &mut &mut balance[..]).unwrap();
+    let mut balance = [0u8; 16];
+    let _ = api::get_storage(StorageFlags::empty(), &key, &mut &mut balance[..]);
     return balance;
 }
 
@@ -298,11 +291,11 @@ pub fn get_allownance_u128(sender: &[u8; 20], spender: &[u8; 20]) -> u128 {
 pub fn get_allownance_bytes(sender: &[u8; 20], spender: &[u8; 20]) -> [u8; 16] {
     let key = get_allownance_key(sender, spender);
     let mut balance = [0u8; 16];
-    api::get_storage(StorageFlags::empty(), &key, &mut &mut balance[..]).unwrap();
+    let _ = api::get_storage(StorageFlags::empty(), &key, &mut &mut balance[..]);
     balance
 }
 
 pub fn set_allownance_u128(sender: &[u8; 20], spender: &[u8; 20], allowance: u128) {
     let key = get_allownance_key(sender, spender);
-    api::set_storage(StorageFlags::empty(), &key, &allowance.to_be_bytes()).unwrap();
+    api::set_storage(StorageFlags::empty(), &key, &allowance.to_be_bytes());
 }

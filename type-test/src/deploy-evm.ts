@@ -1,10 +1,12 @@
 // import { getPublicClient, getWalletClient, ClientUrl } from "./eth"
-import {getEtherProvider, getPublicClient, getWalletClient} from "./eth.ts";
-import {ABI, EMPTY_ABI} from "./erc20.ts"
-import { getEtherClient } from "./eth.ts";
-
+import {getEtherProvider, getPublicClient, getWalletClient} from "./eth";
+import {ABI, EMPTY_ABI} from "./erc20"
+import { getEtherClient } from "./eth";
+import { readFileSync } from "fs";
 import { ethers } from "ethers";
-import { exit } from "node:process";
+
+import {verifyContract} from "./verify";
+
 function uint8ArrayToHex(arr: Uint8Array): string {
   return Array.from(arr)
     .map(byte => byte.toString(16).padStart(2, '0'))
@@ -14,7 +16,7 @@ function uint8ArrayToHex(arr: Uint8Array): string {
 function getBytecode(name: string): string {
   const path = "../rust-contract/" + name + ".polkavm"
   console.log("path is ", path);
-  const bytecode = Deno.readFileSync(path);
+  const bytecode = readFileSync(path);
   const bytecodeHex = uint8ArrayToHex(bytecode);
   const validBytecode = bytecodeHex.replace("0x", "");
   // console.log("bytecode is ", validBytecode);
@@ -42,8 +44,9 @@ async function deployWithEthers(name: string) {
   const contractAddress = contract.target.toString()
   console.log("contract address is ", contractAddress);
 
+  await verifyContract(etherWallet, provider, contractAddress);
+
   provider.destroy();
-  exit(0);
 }
 
 
@@ -60,7 +63,7 @@ async function deployWithViem(name: string  ) {
 
   const path = "../rust-contract/" + name + ".polkavm"
   console.log("path is ", path);
-  const bytecode = Deno.readFileSync(path);
+  const bytecode = readFileSync(path);
   const bytecodeHex = uint8ArrayToHex(bytecode);
   const invalidBytecode = bytecodeHex.replace("0x", "");
 
@@ -75,10 +78,10 @@ async function deployWithViem(name: string  ) {
       BigInt(18),
       BigInt(1e12),],
     account: myAddress,
-    value: 0n,
-    gas: 10000000n,
-    maxFeePerGas: 1000000000n,
-    maxPriorityFeePerGas: 1000000000n,
+    value: BigInt(0),
+    gas: BigInt(10000000),
+    maxFeePerGas: BigInt(1000000000),
+    maxPriorityFeePerGas: BigInt(1000000000),
   }).then((result) => {
     console.log("result is ", result);
   }).catch((error) => {

@@ -10,7 +10,7 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { ethers, JsonRpcProvider } from "ethers";
 import { config } from "dotenv";
-import {ABI} from "./erc20.ts"
+import {ABI} from "./erc20"
 import process from "node:process";
 export type EThClientUrl = "https://westend-asset-hub-eth-rpc.polkadot.io" | "http://127.0.0.1:8545"
 
@@ -84,6 +84,7 @@ export function getEtherClient(provider: JsonRpcProvider, url: EThClientUrl) {
   // const provider = new ethers.JsonRpcProvider(url);
   config();
   let privateKey
+
   
   if (url === "https://westend-asset-hub-eth-rpc.polkadot.io") {
     privateKey = process.env.AH_PRIV_KEY || ""}
@@ -96,8 +97,6 @@ export function getEtherClient(provider: JsonRpcProvider, url: EThClientUrl) {
 
 export function generateRandomEthersWallet(provider: JsonRpcProvider) {
   const account = ethers.Wallet.createRandom();
-  // const provider = new ethers.JsonRpcProvider(url);
-
   const wallet = new ethers.Wallet(account.privateKey, provider);
   return wallet;
 }

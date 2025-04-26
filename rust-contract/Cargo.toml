@@ -40,6 +40,10 @@ path = "src/caller.rs"
 name = "erc20"
 path = "src/erc20.rs"
 
+[[bin]]
+name = "attack"
+path = "src/attack.rs"
+
 [profile.release]
 opt-level = "s"
 lto = "fat"
