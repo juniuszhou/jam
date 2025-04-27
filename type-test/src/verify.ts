@@ -52,36 +52,37 @@ export async function verifyContract( walletClient: Wallet, provider: JsonRpcPro
  console.log("Approve allowance: ", approveAllowance / BigInt(1e18));
 
  // test transferFrom
-  const transferFromTx = await contract.transferFrom(walletAddress, recipientAddress, BigInt(1e18));
-  await transferFromTx.wait();
-  const allowanceAfterTransfer = await contract.allowance(walletAddress, recipientAddress);
-  console.log("My allowance after transferFrom: ", allowanceAfterTransfer / BigInt(1e18));
+  // const transferFromTx = await contract.transferFrom(walletAddress, recipientAddress, BigInt(1e18));
+  // await transferFromTx.wait();
+  // const allowanceAfterTransfer = await contract.allowance(walletAddress, recipientAddress);
+  // console.log("My allowance after transferFrom: ", allowanceAfterTransfer / BigInt(1e18));
 
-//  const tx = {
-//   to: recipientAddress,
-//   value: transferAmount,
-//  }
-//  const txResponse = await walletClient.sendTransaction(tx);
-//  await txResponse.wait();
-// const recipientBalance = await provider.getBalance(recipientAddress);
-// console.log("Recipient balance after transfer: ", recipientBalance);
+ const tx = {
+  to: recipientAddress,
+  value: transferAmount,
+ }
+ const txResponse = await walletClient.sendTransaction(tx);
+ await txResponse.wait();
+const recipientBalance = await provider.getBalance(recipientAddress);
+console.log("Recipient balance after transfer: ", recipientBalance);
 
 
-//  const contract2 = new Contract (
-//     contractAddress,
-//     ABI,
-//     randomWalletClient
-//  );
+ const contract2 = new Contract (
+    contractAddress,
+    ABI,
+    randomWalletClient
+ );
 
-//  const name2 = await contract2.name();
-//  console.log("Name: ", name2);
+ const name2 = await contract2.name();
+ console.log("Name: ", name2);
 //  const transferTx2 = await contract2.transfer(recipientAddress, BigInt(0));
 //  await transferTx2.wait();
 
-  // const transferFromTx = await contract2.transferFrom(walletAddress, recipientAddress, approveAmount / BigInt(2));
-  // await transferFromTx.wait();
-  // const allowanceAfterTransferFrom = await contract.allowance(walletAddress, recipientAddress);
-  // console.log("Approve allowance: ", allowanceAfterTransferFrom);
+// just transfer back to the original wallet
+  const transferFromTx = await contract2.transferFrom(walletAddress, walletAddress, approveAmount / BigInt(2));
+  await transferFromTx.wait();
+  const allowanceAfterTransferFrom = await contract.allowance(walletAddress, recipientAddress);
+  console.log("Approve allowance after transferFrom: ", allowanceAfterTransferFrom);
 
 }
 

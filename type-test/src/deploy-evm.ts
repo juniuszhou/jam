@@ -24,8 +24,8 @@ function getBytecode(name: string): string {
 }
 
 async function deployWithEthers(name: string) {
-  // const url = "https://westend-asset-hub-eth-rpc.polkadot.io";
-  const url = "http://127.0.0.1:8545"
+  const url = "https://westend-asset-hub-eth-rpc.polkadot.io";
+  // const url = "http://127.0.0.1:8545"
   const provider = getEtherProvider(url);
   const etherWallet = getEtherClient(provider, url);
   // etherWallet.connect();
@@ -35,6 +35,7 @@ async function deployWithEthers(name: string) {
   const bytecode = getBytecode(name);
 
   const factory = new ethers.ContractFactory(ABI, bytecode, etherWallet)
+  // const contract = await factory.deploy()
   const contract = await factory.deploy("aaaazzzz",
       "bbbbyyyy",
       BigInt(18),

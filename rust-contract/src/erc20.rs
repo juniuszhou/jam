@@ -162,8 +162,8 @@ pub extern "C" fn call() {
         &[9, 94, 167, 179] => {
             input!(buffer: &[u8; 4 + 32 + 32],);
 
-            let mut address = [0_u8; 20];
-            address.copy_from_slice(&buffer[16..36]);
+            let mut spender = [0_u8; 20];
+            spender.copy_from_slice(&buffer[16..36]);
 
             let mut amount = [0_u8; 16];
             amount.copy_from_slice(&buffer[52..68]);
@@ -177,19 +177,23 @@ pub extern "C" fn call() {
             let balance_after_approve = current_balance - approve_balance;
             set_balance_u128(&sender, balance_after_approve);
 
-            let current_allowance = get_allownance_u128(&sender, &address);
+            let current_allowance = get_allownance_u128(&sender, &spender);
             let allowance_after_approve = current_allowance + approve_balance;
 
-            set_allownance_u128(&sender, &address, allowance_after_approve);
+            set_allownance_u128(&sender, &spender, allowance_after_approve);
             api::return_value(ReturnFlags::empty(), &[0_u8; 32]);
         }
         // transferFrom(address,address,uint256)
         // 0x23b872dd
+        // address spender = _msgSender();
+        // _spendAllowance(from, spender, value);
+        // _transfer(from, to, value);
         &[35, 184, 114, 221] => {
             input!(buffer: &[u8; 4 + 32 + 32 + 32],);
+            let spender = sender;
 
-            let mut spender = [0_u8; 20];
-            spender.copy_from_slice(&buffer[16..36]);
+            let mut from = [0_u8; 20];
+            from.copy_from_slice(&buffer[16..36]);
 
             let mut recipient = [0_u8; 20];
             recipient.copy_from_slice(&buffer[48..68]);
@@ -197,7 +201,7 @@ pub extern "C" fn call() {
             let mut amount = [0_u8; 16];
             amount.copy_from_slice(&buffer[84..100]);
 
-            let current_allowance = get_allownance_u128(&spender, &recipient);
+            let current_allowance = get_allownance_u128(&from, &spender);
             let transfer_balance = u128::from_be_bytes(amount);
             if current_allowance < transfer_balance {
                 panic!("Insufficient allowance");
@@ -209,7 +213,7 @@ pub extern "C" fn call() {
 
             // update balance and allowance
             set_balance_u128(&recipient, balance_after_recieve);
-            set_allownance_u128(&spender, &recipient, balance_after_transfer);
+            set_allownance_u128(&from, &spender, balance_after_transfer);
             api::return_value(ReturnFlags::empty(), &[0_u8; 32]);
         }
 
