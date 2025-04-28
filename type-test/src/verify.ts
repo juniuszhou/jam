@@ -19,20 +19,25 @@ export async function verifyContract( walletClient: Wallet, provider: JsonRpcPro
  const randomWalletClient = await generateRandomEthersWallet(provider);
  const recipientAddress = await randomWalletClient.getAddress();
 
+ console.log("=========================")
  const name = await contract.name();
- const symbol = await contract.symbol();
- const decimals = await contract.decimals();
- const totalSupply = await contract.totalSupply();
- const balance = await contract.balanceOf(walletAddress);
- const allowance = await contract.allowance(walletAddress, recipientAddress);
+//  const symbol = await contract.symbol();
+//  const decimals = await contract.decimals();
+//  const totalSupply = await contract.totalSupply();
+//  const balance = await contract.balanceOf(walletAddress);
+//  const allowance = await contract.allowance(walletAddress, recipientAddress);
 
  // check init status
+
  console.log("Name: ", name);
- console.log("Symbol: ", symbol);
- console.log("Decimals: ", decimals);
- console.log("Total Supply: ", totalSupply);
- console.log("Balance: ", balance);
- console.log("Allowance: ", allowance);
+//  console.log("Symbol: ", symbol);
+
+ return;
+
+//  console.log("Decimals: ", decimals);
+//  console.log("Total Supply: ", totalSupply);
+//  console.log("Balance: ", balance);
+//  console.log("Allowance: ", allowance);
 
  // test transfer
  console.log("recipientAddress: ", recipientAddress);

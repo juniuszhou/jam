@@ -36,10 +36,21 @@ async function deployWithEthers(name: string) {
 
   const factory = new ethers.ContractFactory(ABI, bytecode, etherWallet)
   // const contract = await factory.deploy()
-  const contract = await factory.deploy("aaaazzzz",
+  const contract = await factory.deploy(
+      "aaaazzzzaaaazzzzaaaazzzz",
+      // "aaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzz",
       "bbbbyyyy",
       BigInt(18),
-      BigInt(1e12))
+      BigInt(1e12),
+      {
+        // Gas parameters
+        // gasLimit: 500,         // Maximum gas to use
+        // gasPrice: ethers.parseUnits("50", "gwei"),  // Gas price in gwei
+        // Or for EIP-1559 transactions:
+        // maxFeePerGas: ethers.parseUnits("50", "gwei"),
+        // maxPriorityFeePerGas: ethers.parseUnits("2", "gwei"),
+    }
+    )
 
   await contract.waitForDeployment();
   const contractAddress = contract.target.toString()
@@ -95,4 +106,4 @@ async function deployWithViem(name: string  ) {
 }
 
 
-deployWithEthers("erc20");
+deployWithEthers("name");
