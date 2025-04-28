@@ -1,0 +1,22 @@
+[package]
+name = "riscv-runtime"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+
+[profile.release]
+opt-level = "s"
+lto = "fat"
+codegen-units = 1
+
+[dependencies]
+polkavm-derive = { version = "0.19.0" }
+alloy-core = { version = "0.8.20", default-features = false }
+eth-riscv-runtime = { version = "0.1.0", path = "../../../../r55/eth-riscv-runtime" }
+
+[dependencies.uapi]
+package = "pallet-revive-uapi"
+git = "https://github.com/paritytech/polkadot-sdk.git"
+default-features = false
+features = ["unstable-hostfn"]

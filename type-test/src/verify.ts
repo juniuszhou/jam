@@ -12,8 +12,10 @@ export async function verifyContract( walletClient: Wallet, provider: JsonRpcPro
     walletClient
  );
 
+ // wallet from env private key
  const walletAddress = await walletClient.getAddress();
 
+ // generate a random wallet for transferFrom test
  const randomWalletClient = await generateRandomEthersWallet(provider);
  const recipientAddress = await randomWalletClient.getAddress();
 
@@ -24,6 +26,7 @@ export async function verifyContract( walletClient: Wallet, provider: JsonRpcPro
  const balance = await contract.balanceOf(walletAddress);
  const allowance = await contract.allowance(walletAddress, recipientAddress);
 
+ // check init status
  console.log("Name: ", name);
  console.log("Symbol: ", symbol);
  console.log("Decimals: ", decimals);
@@ -51,12 +54,7 @@ export async function verifyContract( walletClient: Wallet, provider: JsonRpcPro
  const approveAllowance = await contract.allowance(walletAddress, recipientAddress);
  console.log("Approve allowance: ", approveAllowance / BigInt(1e18));
 
- // test transferFrom
-  // const transferFromTx = await contract.transferFrom(walletAddress, recipientAddress, BigInt(1e18));
-  // await transferFromTx.wait();
-  // const allowanceAfterTransfer = await contract.allowance(walletAddress, recipientAddress);
-  // console.log("My allowance after transferFrom: ", allowanceAfterTransfer / BigInt(1e18));
-
+  // transfer native token to new wallet for sending transferFrom later
  const tx = {
   to: recipientAddress,
   value: transferAmount,
@@ -73,12 +71,8 @@ console.log("Recipient balance after transfer: ", recipientBalance);
     randomWalletClient
  );
 
- const name2 = await contract2.name();
- console.log("Name: ", name2);
-//  const transferTx2 = await contract2.transfer(recipientAddress, BigInt(0));
-//  await transferTx2.wait();
 
-// just transfer back to the original wallet
+// test transferFrom, just transfer back to the original wallet
   const transferFromTx = await contract2.transferFrom(walletAddress, walletAddress, approveAmount / BigInt(2));
   await transferFromTx.wait();
   const allowanceAfterTransferFrom = await contract.allowance(walletAddress, recipientAddress);
@@ -93,10 +87,7 @@ export async function main() {
   const provider = getEtherProvider(url);
   const walletClient = await getEtherClient(provider,url);
   
-
   const contractAddress = "0x493275370aF3f63d9ccd10a6539435121cF4fbb9";
-
-  
   provider.destroy();
   exit(0)
 

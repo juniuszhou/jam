@@ -2,7 +2,7 @@
 #![no_std]
 // extern crate alloc;
 // use alloc::vec::Vec;
-
+// use crate::alloc::GLOBAL;
 // use alloc::collections::HashMap;
 use uapi::{HostFn, HostFnImpl as api, StorageFlags};
 
