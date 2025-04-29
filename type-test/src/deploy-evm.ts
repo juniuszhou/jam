@@ -1,26 +1,26 @@
 // import { getPublicClient, getWalletClient, ClientUrl } from "./eth"
-import {getEtherProvider, getPublicClient, getWalletClient} from "./eth";
-import {ABI, EMPTY_ABI} from "./erc20"
+import { getEtherProvider, getPublicClient, getWalletClient } from "./eth";
+import { ABI, EMPTY_ABI } from "./erc20";
 import { getEtherClient } from "./eth";
 import { readFileSync } from "fs";
 import { ethers } from "ethers";
 
-import {verifyContract} from "./verify";
+import { verifyContract } from "./verify";
 
 function uint8ArrayToHex(arr: Uint8Array): string {
   return Array.from(arr)
-    .map(byte => byte.toString(16).padStart(2, '0'))
-    .join('');
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 function getBytecode(name: string): string {
-  const path = "../rust-contract/" + name + ".polkavm"
+  const path = "../rust-contract/" + name + ".polkavm";
   console.log("path is ", path);
   const bytecode = readFileSync(path);
   const bytecodeHex = uint8ArrayToHex(bytecode);
   const validBytecode = bytecodeHex.replace("0x", "");
   // console.log("bytecode is ", validBytecode);
-  return validBytecode; 
+  return validBytecode;
 }
 
 async function deployWithEthers(name: string) {
@@ -34,26 +34,26 @@ async function deployWithEthers(name: string) {
   console.log("my balance is ", await provider.getBalance(myAddress));
   const bytecode = getBytecode(name);
 
-  const factory = new ethers.ContractFactory(ABI, bytecode, etherWallet)
+  const factory = new ethers.ContractFactory(ABI, bytecode, etherWallet);
   // const contract = await factory.deploy()
   const contract = await factory.deploy(
-      "aaaazzzzaaaazzzzaaaazzzz",
-      // "aaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzz",
-      "bbbbyyyy",
-      BigInt(18),
-      BigInt(1e12),
-      {
-        // Gas parameters
-        // gasLimit: 500,         // Maximum gas to use
-        // gasPrice: ethers.parseUnits("50", "gwei"),  // Gas price in gwei
-        // Or for EIP-1559 transactions:
-        // maxFeePerGas: ethers.parseUnits("50", "gwei"),
-        // maxPriorityFeePerGas: ethers.parseUnits("2", "gwei"),
-    }
-    )
+    "name",
+    // "aaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzzaaaazzzz",
+    "symbol",
+    BigInt(18),
+    BigInt(1234),
+    {
+      // Gas parameters
+      // gasLimit: 500,         // Maximum gas to use
+      // gasPrice: ethers.parseUnits("50", "gwei"),  // Gas price in gwei
+      // Or for EIP-1559 transactions:
+      // maxFeePerGas: ethers.parseUnits("50", "gwei"),
+      // maxPriorityFeePerGas: ethers.parseUnits("2", "gwei"),
+    },
+  );
 
   await contract.waitForDeployment();
-  const contractAddress = contract.target.toString()
+  const contractAddress = contract.target.toString();
   console.log("contract address is ", contractAddress);
 
   await verifyContract(etherWallet, provider, contractAddress);
@@ -61,11 +61,13 @@ async function deployWithEthers(name: string) {
   provider.destroy();
 }
 
-
-async function deployWithViem(name: string  ) {
-  const publicClient = await getPublicClient("https://westend-asset-hub-eth-rpc.polkadot.io")
-  const walletClient = await getWalletClient("https://westend-asset-hub-eth-rpc.polkadot.io")
-
+async function deployWithViem(name: string) {
+  const publicClient = await getPublicClient(
+    "https://westend-asset-hub-eth-rpc.polkadot.io",
+  );
+  const walletClient = await getWalletClient(
+    "https://westend-asset-hub-eth-rpc.polkadot.io",
+  );
 
   const myAddress = walletClient.account.address;
   const validAddress = myAddress.replace("0x", "");
@@ -73,7 +75,7 @@ async function deployWithViem(name: string  ) {
     throw new Error("No address found");
   }
 
-  const path = "../rust-contract/" + name + ".polkavm"
+  const path = "../rust-contract/" + name + ".polkavm";
   console.log("path is ", path);
   const bytecode = readFileSync(path);
   const bytecodeHex = uint8ArrayToHex(bytecode);
@@ -81,14 +83,10 @@ async function deployWithViem(name: string  ) {
 
   console.log("bytecode is ", invalidBytecode);
 
-
   walletClient.deployContract({
     abi: ABI,
     bytecode: `0x${invalidBytecode}`,
-    args: [ "aaaazzzz",
-      "bbbbyyyy",
-      BigInt(18),
-      BigInt(1e12),],
+    args: ["aaaazzzz", "bbbbyyyy", BigInt(18), BigInt(1e12)],
     account: myAddress,
     value: BigInt(0),
     gas: BigInt(10000000),
@@ -101,9 +99,10 @@ async function deployWithViem(name: string  ) {
   });
 
   console.log("my address is ", myAddress);
-  console.log("balance is ", await publicClient.getBalance({address:`0x${validAddress}`}))
-
+  console.log(
+    "balance is ",
+    await publicClient.getBalance({ address: `0x${validAddress}` }),
+  );
 }
-
 
 deployWithEthers("name");

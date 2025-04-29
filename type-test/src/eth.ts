@@ -10,9 +10,11 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { ethers, JsonRpcProvider } from "ethers";
 import { config } from "dotenv";
-import {ABI} from "./erc20"
+import { ABI } from "./erc20";
 import process from "node:process";
-export type EThClientUrl = "https://westend-asset-hub-eth-rpc.polkadot.io" | "http://127.0.0.1:8545"
+export type EThClientUrl =
+  | "https://westend-asset-hub-eth-rpc.polkadot.io"
+  | "http://127.0.0.1:8545";
 
 export const ahChain = (url: string, id: number) =>
   defineChain({
@@ -32,22 +34,23 @@ export const ahChain = (url: string, id: number) =>
     testnet: true,
   });
 
-  // defaut chain id is for westend-asset-hub-eth-rpc.polkadot.io
-export function getPublicClient(url: EThClientUrl, id: number = 420420421 ) {
+// defaut chain id is for westend-asset-hub-eth-rpc.polkadot.io
+export function getPublicClient(url: EThClientUrl, id: number = 420420421) {
   const client = createPublicClient({
     chain: ahChain(url, id),
     transport: http(),
-  })
+  });
 
-  return client
+  return client;
 }
 
 export function getWalletClient(url: EThClientUrl, id: number = 420420421) {
   config();
-  console.log("AH pirvate key is ",  process.env.AH_PRIV_KEY);
+  console.log("AH pirvate key is ", process.env.AH_PRIV_KEY);
   let privateKey;
-  if (url === "https://westend-asset-hub-eth-rpc.polkadot.io") {privateKey =  process.env.AH_PRIV_KEY || "";}
-  else {
+  if (url === "https://westend-asset-hub-eth-rpc.polkadot.io") {
+    privateKey = process.env.AH_PRIV_KEY || "";
+  } else {
     privateKey = process.env.LOCAL_PRIV_KEY || "";
   }
 
@@ -71,28 +74,28 @@ export function getERC20Contract(client: PublicClient) {
     address: contractAddress,
     abi: ABI,
     client,
-  })
-  return contract
+  });
+  return contract;
 }
 
 export function getEtherProvider(url: EThClientUrl) {
   const provider = new ethers.JsonRpcProvider(url);
-  return provider
+  return provider;
 }
 
 export function getEtherClient(provider: JsonRpcProvider, url: EThClientUrl) {
   // const provider = new ethers.JsonRpcProvider(url);
   config();
-  let privateKey
+  let privateKey;
 
-  
   if (url === "https://westend-asset-hub-eth-rpc.polkadot.io") {
-    privateKey = process.env.AH_PRIV_KEY || ""}
-  else {
-    privateKey = process.env.LOCAL_PRIV_KEY || ""  };
+    privateKey = process.env.AH_PRIV_KEY || "";
+  } else {
+    privateKey = process.env.LOCAL_PRIV_KEY || "";
+  }
 
-    const wallet = new ethers.Wallet(privateKey, provider);
-    return wallet;
+  const wallet = new ethers.Wallet(privateKey, provider);
+  return wallet;
 }
 
 export function generateRandomEthersWallet(provider: JsonRpcProvider) {

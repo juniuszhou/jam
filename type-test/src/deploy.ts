@@ -7,7 +7,7 @@ import { ss58Address } from "@polkadot-labs/hdkd-helpers";
 import { hub, local } from "../.papi/descriptors/src/index.ts";
 
 import { Binary, TypedApi } from "polkadot-api";
-import {  PolkadotSigner } from "polkadot-api/signer";
+import { PolkadotSigner } from "polkadot-api/signer";
 import { ss58ToEthAddress } from "./convert.ts";
 import { encodeAbiParameters } from "viem";
 
@@ -67,9 +67,9 @@ export async function deploy(
     value: BigInt(0),
     gas_limit: {
       // computation cost
-      ref_time: BigInt( 1e12),
+      ref_time: BigInt(1e12),
       // storage cost
-      proof_size: BigInt( 1e6),
+      proof_size: BigInt(1e6),
     },
     storage_deposit_limit: BigInt(2 * 1e18),
     code: Binary.fromBytes(binaryData),
