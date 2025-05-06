@@ -1,7 +1,6 @@
 // import { getPublicClient, getWalletClient, ClientUrl } from "./eth"
-import { getEtherProvider, getPublicClient, getWalletClient } from "./eth";
+import { getEtherProvider, getPublicClient, getWalletClient, getEtherClient } from "./eth";
 import { ABI, EMPTY_ABI } from "./erc20";
-import { getEtherClient } from "./eth";
 import { readFileSync } from "fs";
 import { ethers } from "ethers";
 

@@ -7,7 +7,7 @@ use alloc::vec::Vec;
 use simplealloc::SimpleAlloc;
 
 #[global_allocator]
-pub static mut GLOBAL: SimpleAlloc<{ 1024 * 1024 * 10 }> = SimpleAlloc::new();
+pub static mut GLOBAL: SimpleAlloc<{ 1024 * 10 }> = SimpleAlloc::new();
 
 // use alloc::collections::HashMap;
 
@@ -107,6 +107,13 @@ pub extern "C" fn deploy() {
     // abi.
 
     let length = api::call_data_size();
+    let mut ptr: *mut u8;
+    unsafe {
+        ptr = GLOBAL.allocate(length as usize, 8);
+        ptr.copy_from(data.as_ptr(), 100);
+        let slice = core::slice::from_raw_parts(ptr, length as usize);
+        api::set_storage(StorageFlags::empty(), DECIMALS, slice);
+    }
 
     // let array: Vec<u8> = Vec::with_capacity(length as usize);
 

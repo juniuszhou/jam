@@ -7,7 +7,7 @@ use alloc::vec::Vec;
 use simplealloc::SimpleAlloc;
 
 #[global_allocator]
-pub static mut GLOBAL: SimpleAlloc<{ 1024 * 10 }> = SimpleAlloc::new();
+pub static mut GLOBAL: SimpleAlloc<{ 1024 * 1024 }> = SimpleAlloc::new();
 
 use uapi::{input, HostFn, HostFnImpl as api, ReturnFlags, StorageFlags};
 
@@ -60,6 +60,11 @@ pub extern "C" fn deploy() {
     ];
 
     let decode_result = decode(param_types, &data[..]).unwrap();
+
+    let mut ptr: *mut u8;
+    unsafe {
+        ptr = GLOBAL.allocate(100, 8);
+    }
 
     if let (
         Token::String(name),

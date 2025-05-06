@@ -35,6 +35,17 @@ export async function verifyContract(
   const balance = await contract.balanceOf(walletAddress);
   const allowance = await contract.allowance(walletAddress, recipientAddress);
 
+  // transfer native token to new wallet for sending transferFrom later
+  const transferAmount = BigInt(1e18);
+  const tx = {
+    to: recipientAddress,
+    value: transferAmount,
+  };
+  const txResponse = await walletClient.sendTransaction(tx);
+  await txResponse.wait();
+  const recipientBalance = await provider.getBalance(recipientAddress);
+  console.log("Recipient balance after transfer: ", recipientBalance);
+
   // check init status
 
   console.log("Name: ", name);
@@ -47,7 +58,7 @@ export async function verifyContract(
 
   // test transfer
   console.log("recipientAddress: ", recipientAddress);
-  const transferAmount = BigInt(1e18);
+  // const transferAmount = BigInt(1e18);
   const transferTx = await contract.transfer(recipientAddress, transferAmount);
   await transferTx.wait();
   console.log("Transfer transaction hash: ", transferTx.hash);
@@ -73,16 +84,6 @@ export async function verifyContract(
     recipientAddress,
   );
   console.log("Approve allowance: ", approveAllowance / BigInt(1e18));
-
-  // transfer native token to new wallet for sending transferFrom later
-  const tx = {
-    to: recipientAddress,
-    value: transferAmount,
-  };
-  const txResponse = await walletClient.sendTransaction(tx);
-  await txResponse.wait();
-  const recipientBalance = await provider.getBalance(recipientAddress);
-  console.log("Recipient balance after transfer: ", recipientBalance);
 
   const contract2 = new Contract(
     contractAddress,

@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "main": "deno run --allow-all main.ts",
+    "main": "deno run --allow-all src/main.ts",
     "deploy": "deno run --allow-all --unstable-sloppy-imports src/deploy.ts",
     "deploy-evm": "deno run --allow-all --unstable-sloppy-imports src/deploy-evm.ts",
     "verify": "deno run --allow-all --unstable-sloppy-imports src/verify.ts",

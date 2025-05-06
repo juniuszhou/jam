@@ -4,8 +4,7 @@
 
 ## cd revive then run.
 
-make install-llvm
-export LLVM_SYS_181_PREFIX=${PWD}/target-llvm/gnu/target-final
+make install-llvm export LLVM_SYS_181_PREFIX=${PWD}/target-llvm/gnu/target-final
 make install-bin
 
 resolc
