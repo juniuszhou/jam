@@ -6,6 +6,15 @@ use alloc::vec::Vec;
 use simplealloc::SimpleAlloc;
 use uapi::{input, HostFn, HostFnImpl as api, ReturnFlags, StorageFlags};
 
+#[panic_handler]
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+    // Safety: The unimp instruction is guaranteed to trap
+    unsafe {
+        core::arch::asm!("unimp");
+        core::hint::unreachable_unchecked();
+    }
+}
+
 #[global_allocator]
 pub static mut GLOBAL: SimpleAlloc<{ 1024 * 1024 }> = SimpleAlloc::new();
 

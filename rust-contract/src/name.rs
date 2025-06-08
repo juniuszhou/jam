@@ -61,11 +61,6 @@ pub extern "C" fn deploy() {
 
     let decode_result = decode(param_types, &data[..]).unwrap();
 
-    let mut ptr: *mut u8;
-    unsafe {
-        ptr = GLOBAL.allocate(100, 8);
-    }
-
     if let (
         Token::String(name),
         Token::String(symbol),

@@ -6,6 +6,15 @@ use alloc::vec::Vec;
 
 use simplealloc::SimpleAlloc;
 
+#[panic_handler]
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+    // Safety: The unimp instruction is guaranteed to trap
+    unsafe {
+        core::arch::asm!("unimp");
+        core::hint::unreachable_unchecked();
+    }
+}
+
 #[global_allocator]
 pub static mut GLOBAL: SimpleAlloc<{ 1024 * 10 }> = SimpleAlloc::new();
 
@@ -36,14 +45,14 @@ const ALLOWANCE: &[u8] = b"allowance";
 //     function transfer(address recipient, uint256 amount);
 // }
 
-#[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-    // Safety: The unimp instruction is guaranteed to trap
-    unsafe {
-        core::arch::asm!("unimp");
-        core::hint::unreachable_unchecked();
-    }
-}
+// #[panic_handler]
+// fn panic(_info: &core::panic::PanicInfo) -> ! {
+//     // Safety: The unimp instruction is guaranteed to trap
+//     unsafe {
+//         core::arch::asm!("unimp");
+//         core::hint::unreachable_unchecked();
+//     }
+// }
 
 /// This is the constructor which is called once per contract.
 /// the input data like this: name, symbol, decimals, total_supply
