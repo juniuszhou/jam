@@ -1,4 +1,4 @@
-# jam
+# jam read
 
 ## hardhat-viem
 
